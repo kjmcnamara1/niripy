@@ -1,0 +1,19 @@
+[project]
+name = "niripy"
+version = "0.1.0"
+description = "Python bindings for Niri."
+readme = "README.md"
+authors = [
+  { name = "Kevin McNamara", email = "kevin.j.mcnamara+tech@proton.me" },
+]
+requires-python = ">=3.12"
+dependencies = ["pydantic>=2.12.5"]
+
+[build-system]
+requires = ["uv_build>=0.9.22,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+]
