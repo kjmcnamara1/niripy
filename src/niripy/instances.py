@@ -1,2 +1,6 @@
+from niripy.sockets import Socket
+
+
 class Instance:
-    pass
+    def __init__(self):
+        self.socket: Socket = Socket()
