@@ -15,14 +15,14 @@ class Socket:
     _path_to_socket: Path
     _socket: socket.socket | None
 
-    def __init__(self, path_to_socket: Path | None = None):
+    def __init__(self, path_to_socket: str = ""):
         niri_socket: str = os.getenv("NIRI_SOCKET", "")
         if not niri_socket:
             raise RuntimeError(
                 "$NIRI_SOCKET is not defined. Are you running inside a niri session?"
             )
 
-        self._path_to_socket = path_to_socket or Path(niri_socket)
+        self._path_to_socket = Path(path_to_socket or niri_socket)
 
         if not self._path_to_socket.is_socket():
             raise FileNotFoundError(f"No socket found at {self._path_to_socket!r}.")
