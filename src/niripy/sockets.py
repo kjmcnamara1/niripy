@@ -2,6 +2,7 @@ import os
 import select
 import socket
 from pathlib import Path
+from typing import Optional
 
 
 class SocketError(Exception):
@@ -78,3 +79,12 @@ class Socket:
                     raise SocketError("Read data from socket failed.") from e
 
         return data.decode("utf-8")
+
+    def send_command(self, message: str) -> str:
+        self.connect()
+        self.send(message)
+        self.wait(5)
+        response = self.read()
+        self.close()
+
+        return response
