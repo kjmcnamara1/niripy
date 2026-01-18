@@ -1,7 +1,9 @@
 import json
 from typing import TypeVar
 
-from niripy.models import ModelWithInstance, Window, Workspace
+from icecream import ic
+
+from niripy.models import ModelWithInstance, Output, Window, Workspace
 from niripy.sockets import Socket
 
 T = TypeVar("T", bound=ModelWithInstance)
@@ -22,7 +24,6 @@ class Instance:
         windows: list[dict] = json.loads(
             self.socket.send_command('{"Windows": null}\n')
         )["Ok"]["Windows"]
-        # print(json.dumps(windows_data, indent=4))
         return [self._create_model_with_instance(Window, w) for w in windows]
 
     def get_workspaces(self) -> list[Workspace]:
@@ -30,6 +31,12 @@ class Instance:
             self.socket.send_command('{"Workspaces": null}\n')
         )["Ok"]["Workspaces"]
         return [self._create_model_with_instance(Workspace, ws) for ws in workspaces]
+
+    def get_outputs(self) -> list[Output]:
+        outputs: dict = json.loads(self.socket.send_command('{"Outputs": null}\n'))[
+            "Ok"
+        ]["Outputs"]
+        return [self._create_model_with_instance(Output, o) for o in outputs.values()]
 
     # def action(self, arguments: list[str]):
     #     response = self.socket.send_command("action", flags=["-j"], args=arguments)

@@ -43,14 +43,14 @@ class LayerSurface(BaseModel):
 
 # ? Maybe StrEnum?
 class Transform(Enum):
-    NORMAL = "normal"
-    ROTATE_90 = "rotate-90"
-    ROTATE_180 = "rotate-180"
-    ROTATE_270 = "rotate-270"
-    FLIPPED = "flipped"
-    FLIPPED_90 = "flipped-90"
-    FLIPPED_180 = "flipped-180"
-    FLIPPED_270 = "flipped-270"
+    NORMAL = "Normal"
+    ROTATE_90 = "_90"
+    ROTATE_180 = "_180"
+    ROTATE_270 = "_270"
+    FLIPPED = "Flipped"
+    FLIPPED_90 = "Flipped90"
+    FLIPPED_180 = "Flipped180"
+    FLIPPED_270 = "Flipped270"
 
 
 class LogicalOutput(BaseModel):
@@ -69,7 +69,7 @@ class Mode(BaseModel):
     is_preferred: bool
 
 
-class Output(BaseModel):
+class Output(ModelWithInstance):
     name: str
     make: str
     model: str
