@@ -1,4 +1,3 @@
-import json
 from typing import TypeVar
 
 from icecream import ic
@@ -90,6 +89,10 @@ class Instance:
         if focused_output is None:
             raise ValueError("Unable to retrieve focused output")
         return focused_output
+
+    def get_output_by_name(self, name: str) -> Output | None:
+        outputs = self._request("outputs").outputs or {}
+        return outputs.get(name)
 
     def get_layers(self) -> list[LayerSurface]:
         return self._request("layers").layers or []
