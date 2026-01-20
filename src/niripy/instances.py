@@ -15,6 +15,9 @@ class Instance:
     def __init__(self):
         self.socket = Socket()
 
+    def __repr__(self) -> str:
+        return f"<Instance(socket={str(self.socket.path)!r})>"
+
     def _create_model_with_instance(self, model: type[T], data: dict):
         m = model(**data)
         m._instance = self

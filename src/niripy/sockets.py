@@ -11,7 +11,7 @@ class SocketError(Exception):
 
 
 class Socket:
-    _path_to_socket: Path
+    path: Path
     _socket: socket.socket | None
 
     def __init__(self, path_to_socket: str = ""):
@@ -21,11 +21,14 @@ class Socket:
                 "$NIRI_SOCKET is not defined. Are you running inside a niri session?"
             )
 
-        self._path_to_socket = Path(path_to_socket or niri_socket)
+        self.path = Path(path_to_socket or niri_socket)
 
-        if not self._path_to_socket.is_socket():
-            raise FileNotFoundError(f"No socket found at {self._path_to_socket!r}.")
+        if not self.path.is_socket():
+            raise FileNotFoundError(f"No socket found at {self.path!r}.")
         self._socket = None
+
+    def __repr__(self) -> str:
+        return f"<Socket(path={str(self.path)!r})>"
 
     def connect(self, timeout: float | None = 1.0):
         if self._socket:
@@ -33,7 +36,7 @@ class Socket:
 
         self._socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self._socket.settimeout(timeout)
-        self._socket.connect(str(self._path_to_socket))
+        self._socket.connect(str(self.path))
         self._socket.setblocking(False)
 
     def close(self):
