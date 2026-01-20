@@ -1,10 +1,17 @@
 from enum import StrEnum
 from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
+from pydantic.alias_generators import to_pascal
 
 if TYPE_CHECKING:
     from niripy.instances import Instance
+
+
+class ReplyError(Exception):
+    """Exception raised when an error occurs while processing a reply."""
+
+    pass
 
 
 class ModelWithInstance(BaseModel):
@@ -148,6 +155,30 @@ class Workspace(ModelWithInstance):
     is_active: bool
     is_focused: bool
     active_window_id: int | None
+
+
+class Response(BaseModel):
+    model_config = ConfigDict(alias_generator=to_pascal)
+    version: str | None = None
+    outputs: dict[str, Output] | None = None
+    workspaces: list[Workspace] | None = None
+    windows: list[Window] | None = None
+    layers: list[LayerSurface] | None = None
+    keyboard_layouts: KeyboardLayouts | None = None
+    focused_output: Output | None = None
+    focused_window: Window | None = None
+
+
+class Reply(BaseModel):
+    model_config = ConfigDict(alias_generator=to_pascal)
+    ok: Response | None = None
+    err: str | None = None
+
+    def unwrap(self) -> Response:
+        if self.err is not None:
+            raise ReplyError(f"Niri replied with error: {self.err}")
+        assert self.ok is not None
+        return self.ok
 
 
 # class Action(BaseModel):
