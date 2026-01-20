@@ -56,6 +56,11 @@ class Instance:
             raise ValueError("Unable to retrieve focused window")
         return focused_window
 
+    def get_window_by_id(self, window_id: int) -> Window | None:
+        for window in self.get_windows():
+            if window.id == window_id:
+                return window
+
     def get_workspaces(self) -> list[Workspace]:
         return self._request("workspaces").workspaces or []
 
@@ -66,6 +71,16 @@ class Instance:
         if focused_workspace is None:
             raise ValueError("Unable to retrieve focused workspace")
         return focused_workspace
+
+    def get_workspace_by_id(self, workspace_id: int) -> Workspace | None:
+        for workspace in self.get_workspaces():
+            if workspace.id == workspace_id:
+                return workspace
+
+    def get_workspace_by_name(self, name: str) -> Workspace | None:
+        for workspace in self.get_workspaces():
+            if workspace.name == name:
+                return workspace
 
     def get_outputs(self) -> list[Output]:
         return list((self._request("outputs").outputs or {}).values())
