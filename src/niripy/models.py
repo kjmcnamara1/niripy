@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import StrEnum
 from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, Field
@@ -21,28 +21,27 @@ class KeyboardLayouts(BaseModel):
     current_idx: int
 
 
-class Layer(Enum):
-    BACKGROUND = "background"
-    BOTTOM = "bottom"
-    TOP = "top"
-    OVERLAY = "overlay"
+class Layer(StrEnum):
+    BACKGROUND = "Background"
+    BOTTOM = "Bottom"
+    TOP = "Top"
+    OVERLAY = "Overlay"
 
 
-class LayerSurfaceKeyboardInteractivity(Enum):
-    NONE = "none"
-    EXCLUSIVE = "exclusive"
-    ON_DEMAND = "on_demand"
+class LayerSurfaceKeyboardInteractivity(StrEnum):
+    NONE = "None"
+    EXCLUSIVE = "Exclusive"
+    ON_DEMAND = "OnDemand"
 
 
-class LayerSurface(BaseModel):
+class LayerSurface(ModelWithInstance):
     namespace: str
     output: str
     layer: Layer
     keyboard_interactivity: LayerSurfaceKeyboardInteractivity
 
 
-# ? Maybe StrEnum?
-class Transform(Enum):
+class Transform(StrEnum):
     NORMAL = "Normal"
     ROTATE_90 = "_90"
     ROTATE_180 = "_180"

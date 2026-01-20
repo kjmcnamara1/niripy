@@ -3,7 +3,7 @@ from typing import TypeVar
 
 from icecream import ic
 
-from niripy.models import ModelWithInstance, Output, Window, Workspace
+from niripy.models import LayerSurface, ModelWithInstance, Output, Window, Workspace
 from niripy.sockets import Socket
 
 T = TypeVar("T", bound=ModelWithInstance)
@@ -37,6 +37,12 @@ class Instance:
             "Ok"
         ]["Outputs"]
         return [self._create_model_with_instance(Output, o) for o in outputs.values()]
+
+    def get_layers(self) -> list[LayerSurface]:
+        layers: list[dict] = json.loads(self.socket.send_command('{"Layers": null}\n'))[
+            "Ok"
+        ]["Layers"]
+        return [self._create_model_with_instance(LayerSurface, l) for l in layers]
 
     # def action(self, arguments: list[str]):
     #     response = self.socket.send_command("action", flags=["-j"], args=arguments)
