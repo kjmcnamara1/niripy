@@ -53,9 +53,13 @@ class LayerSurfaceKeyboardInteractivity(StrEnum):
 
 class LayerSurface(ModelWithInstance):
     namespace: str
-    output: str
+    output_name: str = Field(alias="output")
     layer: Layer
     keyboard_interactivity: LayerSurfaceKeyboardInteractivity
+
+    @property
+    def output(self) -> Output | None:
+        return self._instance.get_output_by_name(self.output_name)
 
 
 class Transform(StrEnum):

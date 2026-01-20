@@ -13,4 +13,6 @@ if __name__ == "__main__":
     niri = Instance()
 
     o = niri.get_focused_output()
-    ic(o.layers)
+    l = o.layers[0]
+    ic(l.model_dump())
+    ic(l.output)
