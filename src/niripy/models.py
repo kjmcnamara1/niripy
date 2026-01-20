@@ -157,6 +157,12 @@ class Window(ModelWithInstance):
     layout: WindowLayout
     focus_timestamp: Timestamp | None
 
+    @property
+    def workspace(self) -> Workspace | None:
+        if self.workspace_id is None:
+            return None
+        return self._instance.get_workspace_by_id(self.workspace_id)
+
 
 class Workspace(ModelWithInstance):
     id: int
