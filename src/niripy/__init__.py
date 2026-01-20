@@ -11,4 +11,5 @@ from niripy.instances import Instance
 
 if __name__ == "__main__":
     niri = Instance()
-    ic(niri.get_version())
+    for output in niri.get_outputs():
+        ic(output.name, output.workspaces, output.layers, output.windows)

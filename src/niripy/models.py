@@ -81,6 +81,25 @@ class Output(ModelWithInstance):
     vrr_enabled: bool
     logical: LogicalOutput | None
 
+    @property
+    def workspaces(self):
+        return [ws for ws in self._instance.get_workspaces() if ws.output == self.name]
+
+    @property
+    def layers(self):
+        return [
+            layer for layer in self._instance.get_layers() if layer.output == self.name
+        ]
+
+    @property
+    def windows(self):
+        workspace_ids = [ws.id for ws in self.workspaces]
+        return [
+            window
+            for window in self._instance.get_windows()
+            if window.workspace_id in workspace_ids
+        ]
+
 
 class Overview(BaseModel):
     is_open: bool
