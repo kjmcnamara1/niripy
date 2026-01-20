@@ -11,5 +11,6 @@ from niripy.instances import Instance
 
 if __name__ == "__main__":
     niri = Instance()
-    ic(niri)
-    ic(niri.socket)
+    ic(niri._request("focused-output"))
+    ic(niri._request("version"))
+    ic(niri._request("foo"))

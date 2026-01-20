@@ -2,8 +2,17 @@ import json
 from typing import TypeVar
 
 from icecream import ic
+from pydantic.alias_generators import to_pascal, to_snake
 
-from niripy.models import LayerSurface, ModelWithInstance, Output, Window, Workspace
+from niripy.models import (
+    LayerSurface,
+    ModelWithInstance,
+    Output,
+    Reply,
+    Response,
+    Window,
+    Workspace,
+)
 from niripy.sockets import Socket
 
 T = TypeVar("T", bound=ModelWithInstance)
@@ -17,6 +26,14 @@ class Instance:
 
     def __repr__(self) -> str:
         return f"<Instance(socket={str(self.socket.path)!r})>"
+
+    def _request(self, command: str, *args: str) -> Response:
+        # to_snake is needed to convert from kebab-case
+        command = to_pascal(to_snake(command))
+        reply = Reply.model_validate_json(
+            self.socket.send_command(f'{{"{command}": null}}\n')
+        )
+        return reply.unwrap()
 
     def _create_model_with_instance(self, model: type[T], data: dict):
         m = model(**data)
