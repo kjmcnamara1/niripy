@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import StrEnum
 from typing import TYPE_CHECKING, Any
 
@@ -160,11 +162,31 @@ class Workspace(ModelWithInstance):
     id: int
     idx: int
     name: str | None
-    output: str | None
+    output_name: str | None = Field(alias="output")
     is_urgent: bool
     is_active: bool
     is_focused: bool
     active_window_id: int | None
+
+    @property
+    def output(self) -> Output | None:
+        if self.output_name is None:
+            return None
+        return self._instance.get_output_by_name(self.output_name)
+
+    @property
+    def active_window(self) -> Window | None:
+        if self.active_window_id is None:
+            return None
+        return self._instance.get_window_by_id(self.active_window_id)
+
+    @property
+    def windows(self) -> list[Window]:
+        return [
+            window
+            for window in self._instance.get_windows()
+            if window.workspace_id == self.id
+        ]
 
 
 class OutputConfigChanged(StrEnum):
