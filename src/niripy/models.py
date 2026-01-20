@@ -1,5 +1,5 @@
 from enum import StrEnum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_pascal
@@ -16,6 +16,14 @@ class ReplyError(Exception):
 
 class ModelWithInstance(BaseModel):
     _instance: "Instance"
+
+    def model_post_init(self, context: Any):
+        if not isinstance(context, dict) or "instance" not in context:
+            raise AssertionError(
+                "context['instance'] not defined: Make sure to validate with context={'instance': ...}. "
+                "i.e. Model.model_validate(data, context={'instance': instance})"
+            )
+        self._instance = context["instance"]
 
 
 class ConfiguredPosition(BaseModel):
