@@ -2,7 +2,6 @@ import os
 import select
 import socket
 from pathlib import Path
-from typing import Optional
 
 
 class SocketError(Exception):
@@ -81,6 +80,18 @@ class Socket:
         return data.decode("utf-8")
 
     def send_command(self, message: str) -> str:
+        """
+        Send a command message and retrieve the response.
+
+        Establishes a connection, sends the provided message, waits for processing,
+        reads the response, and closes the connection.
+
+        Args:
+            message (str): The command message to send. (JSON formatted)
+
+        Returns:
+            str: The response received from the remote endpoint. (JSON formatted)
+        """
         self.connect()
         self.send(message)
         self.wait(5)
