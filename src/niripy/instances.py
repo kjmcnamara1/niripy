@@ -37,34 +37,30 @@ class Instance:
         )
         return reply.unwrap()
 
-    def _create_model_with_instance(self, model: type[T], data: dict):
-        m = model(**data)
-        m._instance = self
-        return m
+    ## def _create_model_with_instance(self, model: type[T], data: dict) -> T:
+    ##     m = model(**data)
+    ##     m._instance = self
+    ##     return m
+
+    def _add_instance_to_model(self, model: T) -> T:
+        model._instance = self
+        return model
 
     def get_windows(self) -> list[Window]:
-        windows: list[dict] = json.loads(
-            self.socket.send_command('{"Windows": null}\n')
-        )["Ok"]["Windows"]
-        return [self._create_model_with_instance(Window, w) for w in windows]
+        windows = self._request("windows").windows or []
+        return [self._add_instance_to_model(window) for window in windows]
 
     def get_workspaces(self) -> list[Workspace]:
-        workspaces: list[dict] = json.loads(
-            self.socket.send_command('{"Workspaces": null}\n')
-        )["Ok"]["Workspaces"]
-        return [self._create_model_with_instance(Workspace, ws) for ws in workspaces]
+        workspaces = self._request("workspaces").workspaces or []
+        return [self._add_instance_to_model(workspace) for workspace in workspaces]
 
     def get_outputs(self) -> list[Output]:
-        outputs: dict = json.loads(self.socket.send_command('{"Outputs": null}\n'))[
-            "Ok"
-        ]["Outputs"]
-        return [self._create_model_with_instance(Output, o) for o in outputs.values()]
+        outputs = self._request("outputs").outputs or {}
+        return [self._add_instance_to_model(output) for output in outputs.values()]
 
     def get_layers(self) -> list[LayerSurface]:
-        layers: list[dict] = json.loads(self.socket.send_command('{"Layers": null}\n'))[
-            "Ok"
-        ]["Layers"]
-        return [self._create_model_with_instance(LayerSurface, l) for l in layers]
+        layers = self._request("layers").layers or []
+        return [self._add_instance_to_model(layer) for layer in layers]
 
     # def action(self, arguments: list[str]):
     #     response = self.socket.send_command("action", flags=["-j"], args=arguments)
