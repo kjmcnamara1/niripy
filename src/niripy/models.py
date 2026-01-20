@@ -112,7 +112,9 @@ class Overview(BaseModel):
     is_open: bool
 
 
-# class PickedColor(BaseModel):
+# [ ]: test colorpicker
+class PickedColor(BaseModel):
+    rgb: tuple[float, float, float]
 
 
 class Timestamp(BaseModel):
@@ -157,6 +159,35 @@ class Workspace(ModelWithInstance):
     active_window_id: int | None
 
 
+class OutputConfigChanged(StrEnum):
+    APPLIED = "Applied"
+    OUTPUT_WAS_MISSING = "OutputWasMissing"
+
+
+class CastKind(StrEnum):
+    PIPEWIRE = "PipeWire"
+    WLR_SCREENCOPY = "WlrScreencopy"
+
+
+class CastTarget(BaseModel):
+    model_config = ConfigDict(alias_generator=to_pascal)
+    nothing: dict | None = None
+    output: dict[str, str] | None = None
+    window: dict[str, int] | None = None
+
+
+# [ ]: test screencasting
+class Cast(BaseModel):
+    stream_id: int
+    session_id: int
+    kind: CastKind
+    target: CastTarget
+    is_dynamic_target: bool
+    is_active: bool
+    pid: int | None
+    pw_node_id: int | None
+
+
 class Response(BaseModel):
     model_config = ConfigDict(alias_generator=to_pascal)
     version: str | None = None
@@ -167,6 +198,11 @@ class Response(BaseModel):
     keyboard_layouts: KeyboardLayouts | None = None
     focused_output: Output | None = None
     focused_window: Window | None = None
+    picked_window: Window | None = None
+    picked_color: PickedColor | None = None
+    output_config_changed: OutputConfigChanged | None = None
+    overview_state: Overview | None = None
+    casts: list[Cast] | None = None
 
 
 class Reply(BaseModel):

@@ -11,6 +11,3 @@ from niripy.instances import Instance
 
 if __name__ == "__main__":
     niri = Instance()
-    ic(niri.get_focused_output())
-    ic(niri.get_focused_window())
-    ic(niri.get_focused_workspace())
