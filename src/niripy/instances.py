@@ -50,13 +50,33 @@ class Instance:
         windows = self._request("windows").windows or []
         return [self._add_instance_to_model(window) for window in windows]
 
+    def get_focused_window(self) -> Window:
+        focused_window = self._request("focused-window").focused_window
+        if focused_window is None:
+            raise ValueError("No focused window")
+        return self._add_instance_to_model(focused_window)
+
     def get_workspaces(self) -> list[Workspace]:
         workspaces = self._request("workspaces").workspaces or []
         return [self._add_instance_to_model(workspace) for workspace in workspaces]
 
+    def get_focused_workspace(self) -> Workspace:
+        focused_workspace = next(
+            (ws for ws in self.get_workspaces() if ws.is_focused), None
+        )
+        if focused_workspace is None:
+            raise ValueError("No focused workspace")
+        return self._add_instance_to_model(focused_workspace)
+
     def get_outputs(self) -> list[Output]:
         outputs = self._request("outputs").outputs or {}
         return [self._add_instance_to_model(output) for output in outputs.values()]
+
+    def get_focused_output(self) -> Output:
+        focused_output = self._request("focused-output").focused_output
+        if focused_output is None:
+            raise ValueError("No focused output")
+        return self._add_instance_to_model(focused_output)
 
     def get_layers(self) -> list[LayerSurface]:
         layers = self._request("layers").layers or []
