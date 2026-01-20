@@ -20,9 +20,11 @@ T = TypeVar("T", bound=ModelWithInstance)
 
 class Instance:
     socket: Socket
+    version: str
 
     def __init__(self):
         self.socket = Socket()
+        self.version = self._request("version").version or "unknown"
 
     def __repr__(self) -> str:
         return f"<Instance(socket={str(self.socket.path)!r})>"
@@ -39,12 +41,6 @@ class Instance:
         m = model(**data)
         m._instance = self
         return m
-
-    def get_version(self) -> str:
-        version: str = json.loads(self.socket.send_command('{"Version": null}\n'))[
-            "Ok"
-        ]["Version"]
-        return version
 
     def get_windows(self) -> list[Window]:
         windows: list[dict] = json.loads(
