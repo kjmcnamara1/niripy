@@ -20,6 +20,12 @@ class Instance:
         m._instance = self
         return m
 
+    def get_version(self) -> str:
+        version: str = json.loads(self.socket.send_command('{"Version": null}\n'))[
+            "Ok"
+        ]["Version"]
+        return version
+
     def get_windows(self) -> list[Window]:
         windows: list[dict] = json.loads(
             self.socket.send_command('{"Windows": null}\n')
