@@ -103,9 +103,11 @@ class Output(ModelWithInstance):
         return [ws for ws in self._instance.get_workspaces() if ws.output == self.name]
 
     @property
-    def layers(self):
+    def layers(self) -> list[LayerSurface]:
         return [
-            layer for layer in self._instance.get_layers() if layer.output == self.name
+            layer
+            for layer in self._instance.get_layers()
+            if layer.output_name == self.name
         ]
 
     @property
