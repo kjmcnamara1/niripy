@@ -253,6 +253,13 @@ class Response(BaseModel):
     def _validate_handled(cls, data: Any) -> Any:
         return {"Handled": True} if data == "Handled" else data
 
+    def unwrap(self) -> Any:
+        """Convenience method to extract the single meaningful field from the response."""
+        for value in self.model_dump().values():
+            if value is not None:
+                return value
+        raise ReplyError("Response does not contain any known fields.")
+
 
 class Reply(BaseModel):
     model_config = ConfigDict(alias_generator=to_pascal)

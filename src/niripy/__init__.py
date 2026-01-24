@@ -12,12 +12,6 @@ from niripy.instances import Instance
 if __name__ == "__main__":
     niri = Instance()
 
-    # ic(niri.socket.send_command('{"Version":null}\n'))
-    # ic(niri.socket.send_command('"Version"\n'))
-    # ic(niri.socket.send_command('{"Action":{"FocusWindow":{"id":2}}}\n'))
-
-    ic(niri._request("version"))
-    # ic(niri._request("focused-window"))
-    # ic(niri._action("focus-window", id=2))
-    ic(niri.action("focus-column-first"))
-    ic(niri.action("fail"))
+    v = niri._request("version")
+    ic(v)
+    ic(v.unwrap())
