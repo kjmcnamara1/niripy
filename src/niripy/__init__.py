@@ -19,4 +19,5 @@ if __name__ == "__main__":
     ic(niri._request("version"))
     # ic(niri._request("focused-window"))
     # ic(niri._action("focus-window", id=2))
-    ic(niri._action("focus-column-first"))
+    ic(niri.action("focus-column-first"))
+    ic(niri.action("fail"))

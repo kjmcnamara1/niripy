@@ -199,7 +199,7 @@ class Instance:
         )
         return reply.unwrap()
 
-    def _action(self, action: ActionCmd, **kwargs: Any) -> Response:
+    def action(self, action: ActionCmd, **kwargs: Any) -> bool:
         action_str = kebab_to_pascal(action)
         request = {"Action": {action_str: {}}}
         for k, v in kwargs.items():
@@ -208,7 +208,7 @@ class Instance:
             self.socket.send_command(request),
             context={"instance": self},
         )
-        return reply.unwrap()
+        return reply.unwrap().handled or False
 
     ## def _create_model_with_instance(self, model: type[T], data: dict) -> T:
     ##     m = model(**data)
