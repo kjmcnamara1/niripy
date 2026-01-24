@@ -96,7 +96,7 @@ class Socket:
             str: The response received from the remote endpoint. (JSON formatted)
         """
         self.connect()
-        self.send(message)
+        self.send(message + "\n")
         self.wait(5)
         response = self.read()
         self.close()

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from enum import StrEnum
+from enum import Enum, StrEnum
 from typing import TYPE_CHECKING, Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from icecream import ic
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from pydantic.alias_generators import to_pascal
 
 if TYPE_CHECKING:
@@ -232,6 +233,7 @@ class Cast(BaseModel):
 
 class Response(BaseModel):
     model_config = ConfigDict(alias_generator=to_pascal)
+    handled: bool | None = None
     version: str | None = None
     outputs: dict[str, Output] | None = None
     workspaces: list[Workspace] | None = None
@@ -245,6 +247,11 @@ class Response(BaseModel):
     output_config_changed: OutputConfigChanged | None = None
     overview_state: Overview | None = None
     casts: list[Cast] | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def _validate_handled(cls, data: Any) -> Any:
+        return {"Handled": True} if data == "Handled" else data
 
 
 class Reply(BaseModel):

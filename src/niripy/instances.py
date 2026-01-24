@@ -1,4 +1,5 @@
-from typing import TypeVar
+import json
+from typing import Any, TypeVar
 
 from icecream import ic
 from pydantic.alias_generators import to_pascal, to_snake
@@ -17,6 +18,10 @@ from niripy.sockets import Socket
 T = TypeVar("T", bound=ModelWithInstance)
 
 
+def kebab_to_pascal(s: str) -> str:
+    return to_pascal(to_snake(s))
+
+
 class Instance:
     socket: Socket
     version: str
@@ -28,11 +33,21 @@ class Instance:
     def __repr__(self) -> str:
         return f"<Instance(socket={str(self.socket.path)!r})>"
 
-    def _request(self, command: str, *args: str) -> Response:
-        # to_snake is needed to convert from kebab-case
-        command = to_pascal(to_snake(command))
+    def _request(self, command: str) -> Response:
+        command = kebab_to_pascal(command)
         reply = Reply.model_validate_json(
-            self.socket.send_command(f'{{"{command}": null}}\n'),
+            self.socket.send_command(json.dumps(command)),
+            context={"instance": self},
+        )
+        return reply.unwrap()
+
+    def _action(self, action: str, **kwargs: Any) -> Response:
+        action = kebab_to_pascal(action)
+        request = {"Action": {action: {}}}
+        for k, v in kwargs.items():
+            request["Action"][action].update({k: v})
+        reply = Reply.model_validate_json(
+            self.socket.send_command(json.dumps(request)),
             context={"instance": self},
         )
         return reply.unwrap()

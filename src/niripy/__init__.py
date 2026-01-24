@@ -12,7 +12,10 @@ from niripy.instances import Instance
 if __name__ == "__main__":
     niri = Instance()
 
-    o = niri.get_focused_output()
-    l = o.layers[0]
-    ic(l.model_dump())
-    ic(l.output)
+    # ic(niri.socket.send_command('{"Version":null}\n'))
+    # ic(niri.socket.send_command('"Version"\n'))
+    # ic(niri.socket.send_command('{"Action":{"FocusWindow":{"id":2}}}\n'))
+
+    ic(niri._request("version"))
+    # ic(niri._request("focused-window"))
+    ic(niri._action("focus-window", id=2))
