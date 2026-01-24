@@ -210,15 +210,6 @@ class Instance:
         )
         return reply.unwrap().handled or False
 
-    ## def _create_model_with_instance(self, model: type[T], data: dict) -> T:
-    ##     m = model(**data)
-    ##     m._instance = self
-    ##     return m
-
-    ## def _add_instance_to_model(self, model: T) -> T:
-    ##     model._instance = self
-    ##     return model
-
     def get_windows(self) -> list[Window]:
         return self._request("windows").windows or []
 
@@ -269,7 +260,3 @@ class Instance:
 
     def get_layers(self) -> list[LayerSurface]:
         return self._request("layers").layers or []
-
-    # def action(self, arguments: list[str]):
-    #     response = self.socket.send_command("action", flags=["-j"], args=arguments)
-    #     return response if response != "ok" else None

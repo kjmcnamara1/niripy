@@ -264,7 +264,3 @@ class Reply(BaseModel):
             raise ReplyError(f"Niri replied with error: {self.err}")
         assert self.ok is not None
         return self.ok
-
-
-# class Action(BaseModel):
-#     name: str
