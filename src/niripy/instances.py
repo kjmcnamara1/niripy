@@ -1,5 +1,5 @@
 import json
-from typing import Any, TypeVar
+from typing import Any, Literal, TypeVar
 
 from icecream import ic
 from pydantic.alias_generators import to_pascal, to_snake
@@ -17,6 +17,21 @@ from niripy.sockets import Socket
 
 T = TypeVar("T", bound=ModelWithInstance)
 
+RequestCmd = Literal[
+    "outputs",
+    "workspaces",
+    "windows",
+    "layers",
+    "keyboard-layouts",
+    "focused-output",
+    "focused-window",
+    "pick-window",
+    "pick-color",
+    "version",
+    "request-error",
+    "overview-state",
+]
+
 
 def kebab_to_pascal(s: str) -> str:
     return to_pascal(to_snake(s))
@@ -33,10 +48,10 @@ class Instance:
     def __repr__(self) -> str:
         return f"<Instance(socket={str(self.socket.path)!r})>"
 
-    def _request(self, command: str) -> Response:
-        command = kebab_to_pascal(command)
+    def _request(self, command: RequestCmd) -> Response:
+        command_str = kebab_to_pascal(command)
         reply = Reply.model_validate_json(
-            self.socket.send_command(json.dumps(command)),
+            self.socket.send_command(command_str),
             context={"instance": self},
         )
         return reply.unwrap()
@@ -47,7 +62,7 @@ class Instance:
         for k, v in kwargs.items():
             request["Action"][action].update({k: v})
         reply = Reply.model_validate_json(
-            self.socket.send_command(json.dumps(request)),
+            self.socket.send_command(request),
             context={"instance": self},
         )
         return reply.unwrap()

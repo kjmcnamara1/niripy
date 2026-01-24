@@ -1,7 +1,9 @@
+import json
 import os
 import select
 import socket
 from pathlib import Path
+from typing import Any
 
 
 class SocketError(Exception):
@@ -82,7 +84,7 @@ class Socket:
 
         return data.decode("utf-8")
 
-    def send_command(self, message: str) -> str:
+    def send_command(self, message: dict[str, Any] | str) -> str:
         """
         Send a command message and retrieve the response.
 
@@ -96,7 +98,7 @@ class Socket:
             str: The response received from the remote endpoint. (JSON formatted)
         """
         self.connect()
-        self.send(message + "\n")
+        self.send(json.dumps(message) + "\n")
         self.wait(5)
         response = self.read()
         self.close()
