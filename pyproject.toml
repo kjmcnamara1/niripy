@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
     { name = "Kevin McNamara", email = "kevin.j.mcnamara+tech@proton.me" },
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = ["pydantic>=2.12.5"]
 
 [build-system]
