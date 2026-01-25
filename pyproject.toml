@@ -4,7 +4,7 @@ version = "0.2.0"
 description = "Python bindings for Niri."
 readme = "README.md"
 authors = [
-  { name = "Kevin McNamara", email = "kevin.j.mcnamara+tech@proton.me" },
+    { name = "Kevin McNamara", email = "kevin.j.mcnamara+tech@proton.me" },
 ]
 requires-python = ">=3.12"
 dependencies = ["pydantic>=2.12.5"]
@@ -14,9 +14,5 @@ requires = ["uv_build>=0.9.22,<0.10.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
-dev = [
-    "icecream>=2.1.9",
-]
-test = [
-    "pytest-cov>=7.0.0",
-]
+dev = ["icecream>=2.1.9"]
+test = ["pytest-cov>=7.0.0"]
