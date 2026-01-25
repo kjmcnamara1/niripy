@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [ ] Add docstrings
-- [ ] Add tests
+- [x] Add tests
 - [ ] Generate documentation with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
 - [/] Update README.md
 

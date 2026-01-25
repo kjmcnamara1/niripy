@@ -11,7 +11,3 @@ from niripy.instances import Instance
 
 if __name__ == "__main__":
     niri = Instance()
-
-    v = niri._request("version")
-    ic(v)
-    ic(v.unwrap())
