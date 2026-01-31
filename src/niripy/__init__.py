@@ -11,3 +11,6 @@ from niripy.instances import Instance
 
 if __name__ == "__main__":
     niri = Instance()
+
+    o = niri.get_focused_output()
+    ic(o.workspaces)
