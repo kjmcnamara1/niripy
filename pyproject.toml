@@ -1,13 +1,29 @@
 [project]
 name = "niripy"
 version = "0.2.0"
-description = "Python bindings for Niri."
-readme = "README.md"
 authors = [
   { name = "Kevin McNamara", email = "kevin.j.mcnamara+tech@proton.me" },
 ]
+description = "Python bindings for Niri."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.14"
 dependencies = ["pydantic>=2.12.5"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Topic :: Desktop Environment :: Window Managers",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/kjmcnamara1/niripy"
+Issues = "https://github.com/kjmcnamara1/niripy/issues"
 
 [build-system]
 requires = ["uv_build>=0.9.22,<0.10.0"]
@@ -20,3 +36,9 @@ test = ["pytest-cov>=7.0.0"]
 [tool.basedpyright]
 reportAny = "none"
 reportExplicitAny = "none"
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
