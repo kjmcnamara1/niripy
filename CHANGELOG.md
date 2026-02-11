@@ -7,18 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- AUR package
+- Github action for publishing to AUR
+- Update shield for AUR in README.md
+
+- Docstrings
+- Generate documentation with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
+
+- Second socket for listening to event-stream
+- Instance.watch method for events
+- Add tests for event-stream
+
+- [x] Publish to pypi test (uv publish --index testpypi --token $UV_PUBLISH_TOKEN_TEST)
+
+## [0.2.2] - 2026-02-11
+
 ### Added
 
-- [ ] Add docstrings
-- [ ] Generate documentation with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
-- [/] Update README.md
-- [ ] Add pyright for type checking
-- [ ] Add github workflows for code quality and publishing
+- Pyright for type checking
+- Github workflows for code quality and publishing
 
-- [ ] Second socket for listening to event-stream
-- [ ] Instance.watch method for events
-- [ ] Add tests for event-stream
-- [x] Publish to pypi test (uv publish --index testpypi --token $UV_PUBLISH_TOKEN_TEST)
+### Changed
+
+- Updated shields in README.md
 
 ## [0.2.1] 2026-02-11
 
