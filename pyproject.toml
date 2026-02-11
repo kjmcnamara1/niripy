@@ -8,7 +8,7 @@ description = "Python bindings for Niri."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = ["pydantic>=2.12.5"]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
@@ -16,6 +16,9 @@ classifiers = [
   "License :: OSI Approved :: MIT License",
   "Operating System :: POSIX :: Linux",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Desktop Environment :: Window Managers",
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
