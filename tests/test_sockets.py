@@ -354,11 +354,11 @@ class TestSocketSendCommand:
         expected_response = '{"result": "success"}'
 
         with (
-            patch.object(socket_obj, "connect") as mock_connect,
-            patch.object(socket_obj, "send") as mock_send,
-            patch.object(socket_obj, "wait") as mock_wait,
+            patch.object(socket_obj, "connect"),
+            patch.object(socket_obj, "send"),
+            patch.object(socket_obj, "wait"),
             patch.object(socket_obj, "read") as mock_read,
-            patch.object(socket_obj, "close") as mock_close,
+            patch.object(socket_obj, "close"),
         ):
             mock_read.return_value = expected_response
 

@@ -1,6 +1,5 @@
 """Tests for niripy.instances module."""
 
-import json
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -9,8 +8,6 @@ from niripy.instances import Instance, kebab_to_pascal
 from niripy.models import (
     LayerSurface,
     Output,
-    Reply,
-    Response,
     Window,
     Workspace,
 )
