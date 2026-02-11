@@ -31,7 +31,7 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = ["icecream>=2.1.9"]
-test = ["pytest-cov>=7.0.0"]
+test = ["pytest-cov>=7.0.0", "vermin>=1.8.0"]
 
 [tool.basedpyright]
 reportAny = "none"
