@@ -327,7 +327,10 @@ class TestOutput:
 
     def test_output_workspaces_property(self, mock_instance):
         """Test Output workspaces property."""
-        mock_workspaces = [MagicMock(output="eDP-1"), MagicMock(output="HDMI-1")]
+        mock_workspaces = [
+            MagicMock(output_name="eDP-1"),
+            MagicMock(output_name="HDMI-1"),
+        ]
         mock_instance.get_workspaces.return_value = mock_workspaces
 
         output = Output.model_validate(
@@ -349,7 +352,7 @@ class TestOutput:
 
         workspaces = output.workspaces
         assert len(workspaces) == 1
-        assert workspaces[0].output == "eDP-1"
+        assert workspaces[0].output_name == "eDP-1"
 
     def test_output_layers_property(self, mock_instance):
         """Test Output layers property."""
@@ -380,12 +383,11 @@ class TestOutput:
 
     def test_output_windows_property(self, mock_instance):
         """Test Output windows property."""
-        mock_ws1 = MagicMock(output="eDP-1", id=1)
-        mock_ws2 = MagicMock(output="HDMI-1", id=2)
-        mock_instance.get_workspaces.return_value = [mock_ws1, mock_ws2]
-
+        mock_ws1 = MagicMock(output_name="eDP-1", id=1)
+        mock_ws2 = MagicMock(output_name="HDMI-1", id=2)
         mock_win1 = MagicMock(workspace_id=1)
         mock_win2 = MagicMock(workspace_id=2)
+        mock_instance.get_workspaces.return_value = [mock_ws1, mock_ws2]
         mock_instance.get_windows.return_value = [mock_win1, mock_win2]
 
         output = Output.model_validate(
