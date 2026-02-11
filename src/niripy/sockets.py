@@ -3,7 +3,7 @@ import os
 import select
 import socket
 from pathlib import Path
-from typing import Any
+from typing import Any, override
 
 
 class SocketError(Exception):
@@ -29,6 +29,7 @@ class Socket:
             raise FileNotFoundError(f"No socket found at {self.path!r}.")
         self._socket = None
 
+    @override
     def __repr__(self) -> str:
         return f"<Socket(path={str(self.path)!r})>"
 

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import StrEnum
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, override
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from pydantic.alias_generators import to_pascal
@@ -17,12 +17,14 @@ class ReplyError(Exception):
 
 
 class ModelWithInstance(BaseModel):
-    _instance: "Instance"
+    _instance: Instance
 
+    @override
     def model_post_init(self, context: Any):
         if not isinstance(context, dict) or "instance" not in context:
             raise AssertionError(
-                "context['instance'] not defined: Make sure to validate with context={'instance': ...}. "
+                "context['instance'] not defined: "  # pyright: ignore[reportImplicitStringConcatenation]
+                "Make sure to validate with context={'instance': ...}. "
                 "i.e. Model.model_validate(data, context={'instance': instance})"
             )
         self._instance = context["instance"]
@@ -214,8 +216,8 @@ class CastKind(StrEnum):
 
 
 class CastTarget(BaseModel):
-    model_config = ConfigDict(alias_generator=to_pascal)
-    nothing: dict | None = None
+    model_config = ConfigDict(alias_generator=to_pascal)  # pyright: ignore[reportUnannotatedClassAttribute]
+    nothing: dict[str, str] | None = None
     output: dict[str, str] | None = None
     window: dict[str, int] | None = None
 
@@ -233,7 +235,7 @@ class Cast(BaseModel):
 
 
 class Response(BaseModel):
-    model_config = ConfigDict(alias_generator=to_pascal)
+    model_config = ConfigDict(alias_generator=to_pascal)  # pyright: ignore[reportUnannotatedClassAttribute]
     handled: bool | None = None
     version: str | None = None
     outputs: dict[str, Output] | None = None
@@ -255,7 +257,7 @@ class Response(BaseModel):
         return {"Handled": True} if data == "Handled" else data
 
     def unwrap(self) -> Any:
-        """Convenience method to extract the single meaningful field from the response."""
+        """Convenience method to extract the meaningful field from the response."""
         for value in self.model_dump().values():
             if value is not None:
                 return value
@@ -263,7 +265,7 @@ class Response(BaseModel):
 
 
 class Reply(BaseModel):
-    model_config = ConfigDict(alias_generator=to_pascal)
+    model_config = ConfigDict(alias_generator=to_pascal)  # pyright: ignore[reportUnannotatedClassAttribute]
     ok: Response | None = None
     err: str | None = None
 

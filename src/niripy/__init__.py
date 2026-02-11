@@ -2,7 +2,8 @@
 Niripy
 ===
 
-Niripy is a python library which provides bindings for the `Niri <https://yalter.github.io/niri/>` wayland compositor.
+Niripy is a python library which provides bindings for the `Niri
+<https://yalter.github.io/niri/>` wayland compositor.
 """
 
 from icecream import ic
@@ -13,4 +14,4 @@ if __name__ == "__main__":
     niri = Instance()
 
     o = niri.get_focused_output()
-    ic(o.workspaces)
+    _ = ic(o.workspaces)

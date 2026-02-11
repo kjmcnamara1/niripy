@@ -1,4 +1,4 @@
-from typing import Any, Literal, TypeVar
+from typing import Any, Literal, TypeVar, override
 
 from pydantic.alias_generators import to_pascal, to_snake
 
@@ -186,6 +186,7 @@ class Instance:
         self.socket = Socket()
         self.version = self._request("version").version or "unknown"
 
+    @override
     def __repr__(self) -> str:
         return f"<Instance(socket={str(self.socket.path)!r})>"
 
@@ -199,7 +200,7 @@ class Instance:
 
     def action(self, action: ActionCmd, **kwargs: Any) -> bool:
         action_str = kebab_to_pascal(action)
-        request = {"Action": {action_str: {}}}
+        request: dict[str, Any] = {"Action": {action_str: {}}}
         for k, v in kwargs.items():
             request["Action"][action_str].update({k: v})
         reply = Reply.model_validate_json(
