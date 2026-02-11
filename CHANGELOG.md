@@ -10,13 +10,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [ ] Add docstrings
-- [x] Add tests
 - [ ] Generate documentation with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
 - [/] Update README.md
+- [ ] Add pyright for type checking
+- [ ] Add github workflows for code quality and publishing
 
 - [ ] Second socket for listening to event-stream
 - [ ] Instance.watch method for events
 - [ ] Add tests for event-stream
+- [x] Publish to pypi test (uv publish --index testpypi --token $UV_PUBLISH_TOKEN_TEST)
+
+## [0.2.1] 2026-02-11
+
+### Added
+
+- Initial README
+- CHANGELOG
+- Unit tests
+- Vermin to test group for static python version detection
+
+### Changed
+
+- Pinned Python version 3.12 -> 3.14
+- Minimum required python version still 3.12
+
+### Removed
+
+- unused imports
+
+### Fixed
+
+- Output.workspaces not producing list of workspaces
+- Suppress pyright typechecking errors
 
 ## [0.2.0] 2026-01-24
 
