@@ -1,5 +1,5 @@
 {
-  "git.enabled": false,
+  "git.enabled": true,
   "taipyStudio.gUI.elementsFilePaths": [],
   "python.testing.pytestArgs": ["tests"],
   "python.testing.unittestEnabled": false,
