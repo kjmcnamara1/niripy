@@ -1,0 +1,29 @@
+name: Publish package
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build_and_publish:
+    name: Build and Publish to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+
+      - name: Build package
+        run: uv build
+
+      - name: Smoke test (wheel)
+        run: uv run --isolated --no-project --with dist/*.whl tests/smoke_test.py
+      - name: Smoke test (source distribution)
+        run: uv run --isolated --no-project --with dist/*.tar.gz tests/smoke_test.py
+
+      - name: Publish package
+        run: uv publish
