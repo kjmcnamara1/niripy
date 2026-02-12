@@ -17,13 +17,14 @@ class Socket:
     _socket: socket.socket | None
 
     def __init__(self, path_to_socket: str = ""):
-        niri_socket: str = os.getenv("NIRI_SOCKET", "")
-        if not niri_socket:
+        path_to_socket = path_to_socket or os.getenv("NIRI_SOCKET", "")
+        if not path_to_socket:
             raise RuntimeError(
-                "$NIRI_SOCKET is not defined. Are you running inside a niri session?"
+                "$NIRI_SOCKET is not defined and no socket provided. "  # pyright: ignore[reportImplicitStringConcatenation]
+                "Are you running inside a niri session?"
             )
 
-        self.path = Path(path_to_socket or niri_socket)
+        self.path = Path(path_to_socket)
 
         if not self.path.is_socket():
             raise FileNotFoundError(f"No socket found at {self.path!r}.")
@@ -63,7 +64,9 @@ class Socket:
 
         ready, _, _ = select.select([self._socket], [], [], timeout)
         if not ready:
-            raise SocketError("Wait for data on socket failed after {timeout} seconds.")
+            raise SocketError(
+                f"Wait for data on socket failed after {timeout} seconds."
+            )
 
     def read(self) -> str:
         if not self._socket:
