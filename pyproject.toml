@@ -40,7 +40,11 @@ dev = [
   "vermin>=1.8.0",
 ]
 
-[tool.basedpyright]
+[tool.ruff]
+exclude = ["tests"]
+
+[tool.pyright]
+ignore = ["tests"]
 reportAny = "none"
 reportExplicitAny = "none"
 
