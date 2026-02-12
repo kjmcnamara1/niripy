@@ -10,7 +10,3 @@ runs:
     - name: Set up Python
       run: uv python install
       shell: bash
-
-    - name: Install dependencies
-      run: uv sync --locked --all-groups
-      shell: bash
