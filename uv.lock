@@ -148,8 +148,6 @@ dependencies = [
 dev = [
     { name = "icecream" },
     { name = "pyright" },
-]
-test = [
     { name = "pytest-cov" },
     { name = "vermin" },
 ]
@@ -161,8 +159,6 @@ requires-dist = [{ name = "pydantic", specifier = ">=2.12.5" }]
 dev = [
     { name = "icecream", specifier = ">=2.1.9" },
     { name = "pyright", specifier = ">=1.1.408" },
-]
-test = [
     { name = "pytest-cov", specifier = ">=7.0.0" },
     { name = "vermin", specifier = ">=1.8.0" },
 ]
