@@ -1,6 +1,6 @@
 [project]
 name = "niripy"
-version = "0.2.2"
+version = "0.2.3"
 authors = [
   { name = "Kevin McNamara", email = "kevin.j.mcnamara+tech@proton.me" },
 ]

@@ -20,6 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [x] Publish to pypi test (uv publish --index testpypi --token $UV_PUBLISH_TOKEN_TEST)
 
+## [0.2.3] - 2026-02-11
+
+### Fixed
+
+- **$NIRI_SOCKET** is no longer required as long as _path_to_socket_ is provided
+- Added 'shell' for composite github action
+- Paths to composite github action from workflows
+
 ## [0.2.2] - 2026-02-11
 
 ### Added
