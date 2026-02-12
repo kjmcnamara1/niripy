@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [x] Publish to pypi test (uv publish --index testpypi --token $UV_PUBLISH_TOKEN_TEST)
 
+## [0.2.5] - 2026-02-11
+
+### Removed
+
+- dev imports from `__init__.py`
+
 ## [0.2.4] - 2026-02-11
 
 ### Added
