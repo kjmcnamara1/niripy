@@ -9,7 +9,7 @@ readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.12"
-dependencies = ["pydantic>=2.12.5"]
+dependencies = ["pydantic>=2.12.4"]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
   "Intended Audience :: Developers",
@@ -29,7 +29,7 @@ Homepage = "https://github.com/kjmcnamara1/niripy"
 Issues = "https://github.com/kjmcnamara1/niripy/issues"
 
 [build-system]
-requires = ["uv_build>=0.9.22,<0.10.0"]
+requires = ["uv_build"]
 build-backend = "uv_build"
 
 [dependency-groups]
