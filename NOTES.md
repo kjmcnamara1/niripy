@@ -1,5 +1,28 @@
 # Notes
 
+## Nix Flake
+
+```sh
+# 1. Check if the flake is valid
+nix flake check
+
+# 2. See what outputs are available
+nix flake show
+
+# 3. Enter the dev shell
+nix develop
+python --version
+python -c "import pydantic; print(pydantic.__version__)"
+python -c "import niripy"
+
+# 4. Build the package
+nix build
+
+# 5. Or run it directly without installing
+nix run
+
+```
+
 ## AUR Submission
 
 ### Steps for initial publish to AUR
@@ -18,7 +41,7 @@
 
 2. Generate ssh key for AUR
 
-   ```bash
+   ```sh
    ssh-keygen -f ~/.ssh/aur
    ```
 
@@ -28,7 +51,7 @@
 
 1. Clone AUR repo (must be _master_ branch)
 
-   ```bash
+   ```sh
    git -c init.defaultBranch=master clone ssh://aur@aur.archlinux.org/python-niripy.git
    ```
 
@@ -38,19 +61,19 @@
 
 1. Update _sha256sums_ for **PKGBUILD** in AUR repo (_pacman-contrib_ package required)
 
-   ```bash
+   ```sh
    updpkgsums
    ```
 
 2. Test the build locally
 
-   ```bash
+   ```sh
    makepkg -si
    ```
 
 3. Generate the **.SRCINFO**
 
-   ```bash
+   ```sh
    makepkg --printsrcinfo > .SRCINFO
    ```
 
@@ -67,14 +90,14 @@
 
 1. Commit changes
 
-   ```bash
+   ```sh
    git add .
    git commit -m "Initial release {version}"
    ```
 
 2. Push to AUR
 
-   ```bash
+   ```sh
    git push origin master
    ```
 
@@ -82,7 +105,7 @@
 
 1. Clone AUR repo
 
-   ```bash
+   ```sh
    git clone ssh://aur@aur.archlinux.org/python-niripy.git
    ```
 

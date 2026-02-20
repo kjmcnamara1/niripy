@@ -52,7 +52,18 @@ Credit to [hyprpy](https://github.com/ulinja/hyprpy) for providing inspiration a
 ### Roadmap
 
 - [x] Add AUR package
-- [ ] Add flake.nix / shell.nix
+- [x] Add flake.nix
 - [ ] Generate documentation with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
 - [ ] Second socket for listening to event-stream
 - [ ] Instance.watch method for events
+
+### Nix
+
+This repository provides a nix flake for development.
+
+```sh
+nix develop
+python --version
+python -c "import pydantic; print(pydantic.__version__)"
+python -c "import niripy"
+```
