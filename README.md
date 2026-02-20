@@ -3,37 +3,31 @@
 [![Python](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&style=for-the-badge)](#)
 [![GitHub Release](https://img.shields.io/github/v/release/kjmcnamara1/niripy?style=for-the-badge&logo=github)](https://github.com/kjmcnamara1/niripy/releases/latest)
 [![PyPI - Version](https://img.shields.io/pypi/v/niripy?style=for-the-badge&logo=pypi)](https://pypi.org/project/niripy)
-
-<!-- [![AUR Version](https://img.shields.io/aur/version/python-niripy?style=for-the-badge&logo=archlinux)](https://aur.archlinux.org/packages/python-niripy) -->
+[![AUR Version](https://img.shields.io/aur/version/python-niripy?style=for-the-badge&logo=archlinux)](https://aur.archlinux.org/packages/python-niripy)
 
 Python bindings for the [Niri](https://yalter.github.io/niri) wayland compositor.
-
-Credit to [hyprpy](https://github.com/ulinja/hyprpy) for providing inspiration and a great starting point.
-
-> [!WARNING] Initial Development
-> Niripy is still in very active and early stages of development.
 
 ## Quickstart
 
 ### Installation
 
-#### Pip
+#### [Python Package Index](https://pypi.org/)
+
+Install with any of the following depending on your python package manager:
 
 ```bash
 pip install niripy
-```
-
-#### Uv
-
-```bash
+poetry add niripy
 uv add niripy
 ```
 
-<!-- #### Arch Linux -->
+#### Arch Linux
 
-<!-- ```bash -->
-<!-- yay -S python-niripy -->
-<!-- ``` -->
+The package is also available on the [AUR](https://aur.archlinux.org):
+
+```bash
+yay -S python-niripy
+```
 
 ### Examples
 
@@ -44,3 +38,21 @@ niri = Instance()
 
 window = niri.get_active_window()
 ```
+
+## Development
+
+> [!WARNING]
+> **Initial Development**
+> Niripy is still in very active and early stages of development.
+
+Please file an issue if you find any bugs or have a feature request.
+
+Credit to [hyprpy](https://github.com/ulinja/hyprpy) for providing inspiration and a great starting point.
+
+### Roadmap
+
+- [x] Add AUR package
+- [ ] Add flake.nix / shell.nix
+- [ ] Generate documentation with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
+- [ ] Second socket for listening to event-stream
+- [ ] Instance.watch method for events
