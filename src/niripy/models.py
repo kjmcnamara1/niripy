@@ -132,7 +132,7 @@ class Overview(BaseModel):
     is_open: bool
 
 
-# [ ]: test colorpicker
+# TODO: test colorpicker
 class PickedColor(BaseModel):
     rgb: tuple[float, float, float]
 
@@ -222,7 +222,7 @@ class CastTarget(BaseModel):
     window: dict[str, int] | None = None
 
 
-# [ ]: test screencasting
+# TODO: test screencasting
 class Cast(BaseModel):
     stream_id: int
     session_id: int
