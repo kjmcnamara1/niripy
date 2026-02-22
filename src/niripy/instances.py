@@ -179,10 +179,45 @@ def kebab_to_pascal(s: str) -> str:
 
 
 class Instance:
+    """High-level interface to Niri window manager.
+
+    Provides methods to query and control the Niri window manager via IPC socket.
+    Handles communication with Niri, model validation, and state management.
+
+    Attributes:
+        socket (Socket): The IPC socket connection to Niri.
+        version (str): The version string of the connected Niri instance.
+
+    Example:
+        ```py
+        >>> from niripy.instances import Instance
+        >>> instance = Instance()
+        >>> print(f"Niri version: {instance.version}")
+        >>> windows = instance.get_windows()
+        >>> for window in windows:
+        ...     print(f"Window: {window.title}")
+        ```
+    """
+
     socket: Socket
     version: str
 
     def __init__(self):
+        """Initialize a connection to the Niri window manager.
+
+        Establishes a socket connection and queries the Niri version.
+
+        Raises:
+            RuntimeError: If $NIRI_SOCKET is not set and no socket is available.
+            FileNotFoundError: If the Niri socket does not exist.
+            ConnectionRefusedError: If unable to connect to the Niri socket.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> print(f"Connected to Niri {instance.version}")
+            ```
+        """
         self.socket = Socket()
         self.version = self._request("version").version or "unknown"
 
@@ -199,6 +234,31 @@ class Instance:
         return reply.unwrap()
 
     def action(self, action: ActionCmd, **kwargs: Any) -> bool:
+        """Execute an action command in Niri.
+
+        Sends an action command to Niri with optional parameters and returns
+        whether the action was handled.
+
+        Args:
+            action (ActionCmd): The action to execute (e.g., "quit", "focus-window").
+            **kwargs: Additional parameters for the action. Parameter names are
+                case-sensitive and should match Niri's expected format.
+
+        Returns:
+            True if the action was handled by Niri, False otherwise.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> # Close the current window
+            >>> instance.action("close-window")
+            True
+            >>>
+            >>> # Focus workspace by index
+            >>> instance.action("focus-workspace", index=1)
+            True
+            ```
+        """
         action_str = kebab_to_pascal(action)
         request: dict[str, Any] = {"Action": {action_str: {}}}
         for k, v in kwargs.items():
@@ -210,23 +270,97 @@ class Instance:
         return reply.unwrap().handled or False
 
     def get_windows(self) -> list[Window]:
+        """Get all open windows in Niri.
+
+        Returns:
+            A list of all currently open windows. Returns an empty
+                list if no windows are open.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> windows = instance.get_windows()
+            >>> for window in windows:
+            ...     print(f"Title: {window.title}")
+            ```
+        """
         return self._request("windows").windows or []
 
     def get_focused_window(self) -> Window:
+        """Get the currently focused window.
+
+        Returns:
+            The window that currently has keyboard focus.
+
+        Raises:
+            ValueError: If no window is focused.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> focused = instance.get_focused_window()
+            >>> print(f"Focused: {focused.title}")
+            ```
+        """
         focused_window = self._request("focused-window").focused_window
         if focused_window is None:
             raise ValueError("Unable to retrieve focused window")
         return focused_window
 
     def get_window_by_id(self, window_id: int) -> Window | None:
+        """Get a window by its ID.
+
+        Args:
+            window_id (int): The ID of the window to retrieve.
+
+        Returns:
+            The window with the given ID, or None if not found.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> window = instance.get_window_by_id(12345)
+            >>> if window:
+            ...     print(f"Found: {window.title}")
+            ```
+        """
         for window in self.get_windows():
             if window.id == window_id:
                 return window
 
     def get_workspaces(self) -> list[Workspace]:
+        """Get all workspaces.
+
+        Returns:
+            A list of all workspaces. Returns an empty list if
+                no workspaces exist.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> workspaces = instance.get_workspaces()
+            >>> for ws in workspaces:
+            ...     print(f"Workspace: {ws.name}, Focused: {ws.is_focused}")
+            ```
+        """
         return self._request("workspaces").workspaces or []
 
     def get_focused_workspace(self) -> Workspace:
+        """Get the currently focused workspace.
+
+        Returns:
+            The workspace that currently has focus.
+
+        Raises:
+            ValueError: If no workspace is focused.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> focused = instance.get_focused_workspace()
+            >>> print(f"Focused workspace: {focused.name}")
+            ```
+        """
         focused_workspace = next(
             (ws for ws in self.get_workspaces() if ws.is_focused), None
         )
@@ -235,27 +369,119 @@ class Instance:
         return focused_workspace
 
     def get_workspace_by_id(self, workspace_id: int) -> Workspace | None:
+        """Get a workspace by its ID.
+
+        Args:
+            workspace_id (int): The ID of the workspace to retrieve.
+
+        Returns:
+            The workspace with the given ID, or None if not found.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> workspace = instance.get_workspace_by_id(1)
+            >>> if workspace:
+            ...     print(f"Found workspace: {workspace.name}")
+            ```
+        """
         for workspace in self.get_workspaces():
             if workspace.id == workspace_id:
                 return workspace
 
     def get_workspace_by_name(self, name: str) -> Workspace | None:
+        """Get a workspace by its name.
+
+        Args:
+            name (str): The name of the workspace to retrieve.
+
+        Returns:
+            The workspace with the given name, or None if not
+                found.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> workspace = instance.get_workspace_by_name("work")
+            >>> if workspace:
+            ...     print(f"Found workspace: {workspace.id}")
+            ```
+        """
         for workspace in self.get_workspaces():
             if workspace.name == name:
                 return workspace
 
     def get_outputs(self) -> list[Output]:
+        """Get all connected monitors/outputs.
+
+        Returns:
+            A list of all connected outputs (monitors). Returns an
+                empty list if no outputs are connected.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> outputs = instance.get_outputs()
+            >>> for output in outputs:
+            ...     print(f"Monitor: {output.name}, Width: {output.physical_width}")
+            ```
+        """
         return list((self._request("outputs").outputs or {}).values())
 
     def get_focused_output(self) -> Output:
+        """Get the currently focused monitor/output.
+
+        Returns:
+            The output that currently has focus (where the cursor is).
+
+        Raises:
+            ValueError: If no output is focused.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> output = instance.get_focused_output()
+            >>> print(f"Focused monitor: {output.name}")
+            ```
+        """
         focused_output = self._request("focused-output").focused_output
         if focused_output is None:
             raise ValueError("Unable to retrieve focused output")
         return focused_output
 
     def get_output_by_name(self, name: str) -> Output | None:
+        """Get an output (monitor) by its name.
+
+        Args:
+            name (str): The name of the output (e.g., "HDMI-1", "DP-2").
+
+        Returns:
+            The output with the given name, or None if not found.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> output = instance.get_output_by_name("HDMI-1")
+            >>> if output:
+            ...     print(f"Found monitor: {output.name}")
+            ```
+        """
         outputs = self._request("outputs").outputs or {}
         return outputs.get(name)
 
     def get_layers(self) -> list[LayerSurface]:
+        """Get all layer surfaces.
+
+        Returns:
+            A list of all layer surfaces (e.g., panels,
+                backgrounds). Returns an empty list if no layer surfaces exist.
+
+        Example:
+            ```py
+            >>> instance = Instance()
+            >>> layers = instance.get_layers()
+            >>> for layer in layers:
+            ...     print(f"Layer: {layer.namespace}")
+            ```
+        """
         return self._request("layers").layers or []

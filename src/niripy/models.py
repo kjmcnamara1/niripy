@@ -11,16 +11,62 @@ if TYPE_CHECKING:
 
 
 class ReplyError(Exception):
-    """Exception raised when an error occurs while processing a reply."""
+    """Exception raised when an error occurs while processing a Niri reply.
+
+    This exception is raised when:
+    - Niri returns an error response
+    - A reply cannot be unwrapped/parsed
+    - A response doesn't contain expected fields
+
+    Example:
+        ```py
+        >>> from niripy.models import Reply, ReplyError
+        >>> try:
+        ...     reply = Reply.model_validate_json(error_response)
+        ...     reply.unwrap()
+        ... except ReplyError as e:
+        ...     print(f"Niri error: {e}")
+        ```
+    """
 
     pass
 
 
 class ModelWithInstance(BaseModel):
+    """Base model for Niri objects that need access to the Instance.
+
+    This is a Pydantic BaseModel that stores a reference to the Instance,
+    allowing models to query related objects and state from Niri.
+
+    Attributes:
+        _instance (Instance): Reference to the connected Niri instance.
+
+    Note:
+        When validating models that inherit from this, always pass
+        `context={'instance': instance}` to `model_validate()`.
+
+    Example:
+        ```py
+        >>> from niripy.instances import Instance
+        >>> from niripy.models import Window
+        >>> instance = Instance()
+        >>> window_data = {"id": 1, "title": "Test", ...}
+        >>> window = Window.model_validate(window_data, context={'instance': instance})
+        ```
+    """
+
     _instance: Instance
 
     @override
     def model_post_init(self, context: Any):
+        """Post-initialization hook to validate and store the instance context.
+
+        Args:
+            context (Any): Validation context. Must be a dict with 'instance' key.
+
+        Raises:
+            AssertionError: If context doesn't contain the 'instance' key.
+        """
         if not isinstance(context, dict) or "instance" not in context:
             raise AssertionError(
                 "context['instance'] not defined: "  # pyright: ignore[reportImplicitStringConcatenation]
@@ -31,16 +77,41 @@ class ModelWithInstance(BaseModel):
 
 
 class ConfiguredPosition(BaseModel):
+    """A 2D position with integer coordinates.
+
+    Attributes:
+        x (int): X coordinate.
+        y (int): Y coordinate.
+    """
+
     x: int
     y: int
 
 
 class KeyboardLayouts(BaseModel):
+    """Information about available keyboard layouts.
+
+    Attributes:
+        names (list[str]): List of available keyboard layout names.
+        current_idx (int): Index of the currently active layout in the names list.
+    """
+
     names: list[str]
     current_idx: int
 
 
 class Layer(StrEnum):
+    """Wayland layer shell layer types.
+
+    Represents the different zwlr_layer_shell layers for positioning surfaces.
+
+    Attributes:
+        BACKGROUND: Background layer, below everything.
+        BOTTOM: Above background, below normal windows.
+        TOP: Above normal windows, below overlay.
+        OVERLAY: Top layer, above everything.
+    """
+
     BACKGROUND = "Background"
     BOTTOM = "Bottom"
     TOP = "Top"
@@ -54,13 +125,32 @@ class LayerSurfaceKeyboardInteractivity(StrEnum):
 
 
 class LayerSurface(ModelWithInstance):
+    """A layer shell surface (e.g., panel, notification).
+
+    Represents a surface from the Wayland layer shell protocol.
+
+    Attributes:
+        namespace (str): The namespace/identifier of the surface.
+        output_name (str): The name of the output this surface is on.
+        layer (Layer): The layer this surface is placed in.
+        keyboard_interactivity (LayerSurfaceKeyboardInteractivity): Keyboard
+            interactivity mode for this surface.
+    """
+
     namespace: str
     output_name: str = Field(alias="output")
     layer: Layer
     keyboard_interactivity: LayerSurfaceKeyboardInteractivity
 
+    # TODO: switch to get_output()
+    # not idomatic to access socket call via property
     @property
     def output(self) -> Output | None:
+        """Get the output this layer surface is displayed on.
+
+        Returns:
+            The output object, or None if not found.
+        """
         return self._instance.get_output_by_name(self.output_name)
 
 
@@ -76,6 +166,20 @@ class Transform(StrEnum):
 
 
 class LogicalOutput(BaseModel):
+    """Logical output configuration and transformations.
+
+    Represents the logical position and scaling of an output in a multi-monitor
+    setup.
+
+    Attributes:
+        x (int): Logical X position in pixels.
+        y (int): Logical Y position in pixels.
+        width (int): Logical width in pixels.
+        height (int): Logical height in pixels.
+        scale (float): Scale factor for DPI (e.g., 2.0 for 200%).
+        transform (Transform): Rotation and/or flip transformation.
+    """
+
     x: int
     y: int
     width: int
@@ -85,6 +189,15 @@ class LogicalOutput(BaseModel):
 
 
 class Mode(BaseModel):
+    """A display mode (resolution and refresh rate).
+
+    Attributes:
+        width (int): Resolution width in pixels.
+        height (int): Resolution height in pixels.
+        refresh_rate (int): Refresh rate in Hz.
+        is_preferred (bool): Whether this is the preferred/native mode.
+    """
+
     width: int
     height: int
     refresh_rate: int
@@ -92,6 +205,24 @@ class Mode(BaseModel):
 
 
 class Output(ModelWithInstance):
+    """A monitor/output device.
+
+    Represents a connected display monitor with its capabilities and current state.
+
+    Attributes:
+        name (str): Output identifier (e.g., "HDMI-1", "DP-2").
+        make (str): Manufacturer name.
+        model (str): Model designation.
+        serial (str | None): Serial number if available.
+        physical_size (tuple[int, int]): Physical dimensions in millimeters (width, height).
+        modes (list[Mode]): Available display modes.
+        current_mode (int | None): Index of current mode in modes list, or None if custom.
+        is_custom_mode (bool): Whether the current mode is custom/manual.
+        vrr_supported (bool): Whether variable refresh rate is supported.
+        vrr_enabled (bool): Whether VRR is currently enabled.
+        logical (LogicalOutput | None): Logical position and scaling info.
+    """
+
     name: str
     make: str
     model: str
@@ -105,13 +236,24 @@ class Output(ModelWithInstance):
     logical: LogicalOutput | None
 
     @property
-    def workspaces(self):
+    def workspaces(self) -> list[Workspace]:
+        """Get all workspaces on this output.
+
+        Returns:
+            Workspaces displayed on this output.
+        """
         return [
             ws for ws in self._instance.get_workspaces() if ws.output_name == self.name
         ]
 
     @property
     def layers(self) -> list[LayerSurface]:
+        """Get all layer surfaces on this output.
+
+        Returns:
+            Layer surfaces (panels, notifications, etc.)
+                on this output.
+        """
         return [
             layer
             for layer in self._instance.get_layers()
@@ -119,7 +261,12 @@ class Output(ModelWithInstance):
         ]
 
     @property
-    def windows(self):
+    def windows(self) -> list[Window]:
+        """Get all windows on workspaces on this output.
+
+        Returns:
+            Windows from all workspaces on this output.
+        """
         workspace_ids = [ws.id for ws in self.workspaces]
         return [
             window
@@ -129,25 +276,69 @@ class Output(ModelWithInstance):
 
 
 class Overview(BaseModel):
+    """Overview mode state.
+
+    Attributes:
+        is_open (bool): Whether the overview is currently open/visible.
+    """
+
     is_open: bool
 
 
 # TODO: test colorpicker
 class PickedColor(BaseModel):
+    """A color picked by the color picker tool.
+
+    Attributes:
+        rgb (tuple[float, float, float]): RGB color values (typically 0-1 range).
+
+    Note:
+        This model is not fully tested yet.
+    """
+
     rgb: tuple[float, float, float]
 
 
 class Timestamp(BaseModel):
+    """A timestamp with second and nanosecond precision.
+
+    Attributes:
+        seconds (int): Number of seconds.
+        nanoseconds (int): Nanosecond component (0-999,999,999).
+    """
+
     seconds: int = Field(alias="secs")
     nanoseconds: int = Field(alias="nanos")
 
 
 class VrrToSet(BaseModel):
+    """VRR (Variable Refresh Rate) settings to apply.
+
+    Attributes:
+        vrr (bool): Whether to enable VRR.
+        on_demand (bool): If true, VRR is only active during updates
+            (power saving mode).
+    """
+
     vrr: bool
     on_demand: bool
 
 
 class WindowLayout(BaseModel):
+    """Layout information for a window in the tiling layout.
+
+    Contains positioning and sizing data for a window within Niri's tiling system.
+
+    Attributes:
+        pos_in_scrolling_layout (tuple[int, int] | None): Position in scrolling layout.
+        tile_size (tuple[float, float]): Size of the tile (width, height).
+        window_size (tuple[int, int]): Actual window size in pixels (width, height).
+        tile_pos_in_workspace_view (tuple[float, float] | None): Tile position
+            in workspace view.
+        window_offset_in_tile (tuple[float, float]): Offset of window content
+            within its tile.
+    """
+
     pos_in_scrolling_layout: tuple[int, int] | None
     tile_size: tuple[float, float]
     window_size: tuple[int, int]
@@ -156,6 +347,23 @@ class WindowLayout(BaseModel):
 
 
 class Window(ModelWithInstance):
+    """A window in the Niri compositor.
+
+    Represents an open window with its state, position, and metadata.
+
+    Attributes:
+        id (int): Unique window identifier.
+        title (str | None): Window title if available.
+        app_id (str | None): Application ID (from desktop file).
+        pid (int | None): Process ID if available.
+        workspace_id (int | None): ID of workspace containing this window.
+        is_focused (bool): Whether this window has keyboard focus.
+        is_floating (bool): Whether the window is floating (not tiled).
+        is_urgent (bool): Whether the window has an urgent flag set.
+        layout (WindowLayout): Tiling layout information.
+        focus_timestamp (Timestamp | None): When this window was last focused.
+    """
+
     id: int
     title: str | None
     app_id: str | None
@@ -169,12 +377,32 @@ class Window(ModelWithInstance):
 
     @property
     def workspace(self) -> Workspace | None:
+        """Get the workspace containing this window.
+
+        Returns:
+            The workspace, or None if not in any workspace.
+        """
         if self.workspace_id is None:
             return None
         return self._instance.get_workspace_by_id(self.workspace_id)
 
 
 class Workspace(ModelWithInstance):
+    """A workspace (virtual desktop) in Niri.
+
+    Represents a workspace that contains windows and is assigned to an output.
+
+    Attributes:
+        id (int): Unique workspace identifier.
+        idx (int): Index/order of this workspace.
+        name (str | None): User-friendly workspace name if set.
+        output_name (str | None): Name of the output this workspace is on.
+        is_urgent (bool): Whether the workspace has an urgent flag set.
+        is_active (bool): Whether this workspace is active (visible).
+        is_focused (bool): Whether this workspace has keyboard focus.
+        active_window_id (int | None): ID of the currently focused window.
+    """
+
     id: int
     idx: int
     name: str | None
@@ -186,18 +414,33 @@ class Workspace(ModelWithInstance):
 
     @property
     def output(self) -> Output | None:
+        """Get the output this workspace is displayed on.
+
+        Returns:
+            The output, or None if not assigned.
+        """
         if self.output_name is None:
             return None
         return self._instance.get_output_by_name(self.output_name)
 
     @property
     def active_window(self) -> Window | None:
+        """Get the currently focused window in this workspace.
+
+        Returns:
+            The active window, or None if no window is focused.
+        """
         if self.active_window_id is None:
             return None
         return self._instance.get_window_by_id(self.active_window_id)
 
     @property
     def windows(self) -> list[Window]:
+        """Get all windows in this workspace.
+
+        Returns:
+            All windows currently in this workspace.
+        """
         return [
             window
             for window in self._instance.get_windows()
@@ -216,6 +459,16 @@ class CastKind(StrEnum):
 
 
 class CastTarget(BaseModel):
+    """Target of a screen cast (what to record).
+
+    One of the three fields should be set to indicate the cast target.
+
+    Attributes:
+        nothing (dict[str, str] | None): No specific target (background, etc.).
+        output (dict[str, str] | None): Cast a specific output/monitor.
+        window (dict[str, int] | None): Cast a specific window.
+    """
+
     model_config = ConfigDict(alias_generator=to_pascal)  # pyright: ignore[reportUnannotatedClassAttribute]
     nothing: dict[str, str] | None = None
     output: dict[str, str] | None = None
@@ -224,6 +477,24 @@ class CastTarget(BaseModel):
 
 # TODO: test screencasting
 class Cast(BaseModel):
+    """An active screen cast session.
+
+    Represents a screen capture/recording session.
+
+    Attributes:
+        stream_id (int): Stream identifier.
+        session_id (int): Session identifier.
+        kind (CastKind): The casting protocol used.
+        target (CastTarget): What is being cast (output/window/etc).
+        is_dynamic_target (bool): Whether the target can change during cast.
+        is_active (bool): Whether the cast is currently active.
+        pid (int | None): Process ID of the casting application.
+        pw_node_id (int | None): PipeWire node ID if using PipeWire.
+
+    Note:
+        Screen casting is not fully tested yet.
+    """
+
     stream_id: int
     session_id: int
     kind: CastKind
@@ -235,6 +506,28 @@ class Cast(BaseModel):
 
 
 class Response(BaseModel):
+    """A response from a Niri IPC request.
+
+    Contains the result of a request, with one of the fields populated depending
+    on the request type.
+
+    Attributes:
+        handled (bool | None): Whether an action was handled.
+        version (str | None): Niri version string.
+        outputs (dict[str, Output] | None): Map of output names to Output objects.
+        workspaces (list[Workspace] | None): List of all workspaces.
+        windows (list[Window] | None): List of all windows.
+        layers (list[LayerSurface] | None): List of layer surfaces.
+        keyboard_layouts (KeyboardLayouts | None): Available keyboard layouts.
+        focused_output (Output | None): The currently focused output.
+        focused_window (Window | None): The currently focused window.
+        picked_window (Window | None): Window selected by pick-window action.
+        picked_color (PickedColor | None): Color selected by pick-color action.
+        output_config_changed (OutputConfigChanged | None): Status of output config change.
+        overview_state (Overview | None): Overview mode state.
+        casts (list[Cast] | None): List of active screen casts.
+    """
+
     model_config = ConfigDict(alias_generator=to_pascal)  # pyright: ignore[reportUnannotatedClassAttribute]
     handled: bool | None = None
     version: str | None = None
@@ -257,7 +550,24 @@ class Response(BaseModel):
         return {"Handled": True} if data == "Handled" else data
 
     def unwrap(self) -> Any:
-        """Convenience method to extract the meaningful field from the response."""
+        """Extract the meaningful field from the response.
+
+        Returns the first non-None field from the response. Useful for extracting
+        the actual response value after validation.
+
+        Returns:
+            The first non-None response field.
+
+        Raises:
+            ReplyError: If all fields are None.
+
+        Example:
+            ```py
+            >>> reply = Reply.model_validate_json(json_data, context={'instance': instance})
+            >>> response = reply.unwrap()
+            >>> windows = response.unwrap()  # Extract the actual data
+            ```
+        """
         for value in self.model_dump().values():
             if value is not None:
                 return value
@@ -265,11 +575,45 @@ class Response(BaseModel):
 
 
 class Reply(BaseModel):
+    """A Niri IPC protocol reply.
+
+    Wraps a Response with success/error indication. Either `ok` or `err`
+    will be set, never both.
+
+    Attributes:
+        ok (Response | None): The response data if the request succeeded.
+        err (str | None): Error message if the request failed.
+
+    Example:
+        ```py
+        >>> from niripy.instances import Instance
+        >>> instance = Instance()
+        >>> json_data = instance.socket.send_command({"Outputs": {}})
+        >>> reply = Reply.model_validate_json(json_data, context={'instance': instance})
+        >>> response = reply.unwrap()  # Raises ReplyError if err is set
+        >>> windows = response.unwrap()  # Extract the actual data
+        ```
+    """
+
     model_config = ConfigDict(alias_generator=to_pascal)  # pyright: ignore[reportUnannotatedClassAttribute]
     ok: Response | None = None
     err: str | None = None
 
     def unwrap(self) -> Response:
+        """Extract the response or raise an error.
+
+        Returns:
+            The ok response if present.
+
+        Raises:
+            ReplyError: If the reply contains an error.
+
+        Example:
+            ```py
+            >>> reply = Reply.model_validate_json(data, context={'instance': instance})
+            >>> response = reply.unwrap()  # Raises if err is set
+            ```
+        """
         if self.err is not None:
             raise ReplyError(f"Niri replied with error: {self.err}")
         assert self.ok is not None
