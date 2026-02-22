@@ -53,7 +53,7 @@ Credit to [hyprpy](https://github.com/ulinja/hyprpy) for providing inspiration a
 
 - [x] Add AUR package
 - [x] Add flake.nix
-- [ ] Generate documentation with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
+- [x] Generate documentation site with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
 - [ ] Second socket for listening to event-stream
 - [ ] Instance.watch method for events
 

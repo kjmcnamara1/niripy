@@ -1,0 +1,166 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+site_name: NiriPy
+site_description: "Python bindings for the Niri Wayland compositor"
+site_author: Kevin McNamara
+site_url: https://kjmcnamara1.github.io/niripy
+repo_url: https://github.com/kjmcnamara1/niripy
+repo_name: kjmcnamara1/niripy
+edit_uri: edit/main/docs/
+watch:
+  - src/niripy
+  - docs
+
+# TODO: add mike versioning when needed
+
+# extra:
+#   generator: false
+#   version:
+#     provider: mike
+
+nav:
+  - Home: index.md
+  - Usage: usage.md
+  - API:
+      - niripy: api/niripy.md
+      - instances: api/instances.md
+      - models: api/models.md
+      - sockets: api/sockets.md
+
+markdown_extensions:
+  - abbr
+  - attr_list
+  - def_list
+  - admonition
+  - pymdownx.details
+  - toc:
+      permalink: ⚓︎
+      permalink_title: Anchor link to this section for reference
+  - pymdownx.highlight:
+      pygments_lang_class: true
+      anchor_linenums: true
+      linenums_style: pymdownx-inline
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.snippets
+  - pymdownx.betterem
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.keys
+  - pymdownx.smartsymbols
+
+theme:
+  name: material
+  language: en
+  # logo: assets/icons/logo.png
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Roboto
+    code: JetBrains Mono
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.instant.preview
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.path
+    - navigation.top
+    # - navigation.footer
+    # - navigation.indexes
+    - toc.follow
+    # - toc.integrate
+    - content.action.edit
+    - content.action.view
+    - content.tooltips
+    - content.code.annotate
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme)"
+      primary: cyan
+      accent: teal
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: cyan
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: cyan
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+plugins:
+  - search
+  - autorefs
+  # - optimize
+  - git-revision-date-localized
+  # - git-revision-date-localized:
+  #     enable_creation_date: true
+  #     type: timeago
+  - git-committers:
+      repository: kjmcnamara1/niripy
+      branch: main
+  - mike:
+      canonical_version: latest
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          inventories:
+            - https://docs.python.org/3/objects.inv
+            - https://docs.pydantic.dev/latest/objects.inv
+          options:
+            members_order: source
+            line_length: 88
+            heading_level: 1
+            summary: true
+            backlinks: tree
+            # show_bases: false
+            # show_inheritance_diagram: true
+            # show_category_heading: true
+            separate_signature: true
+            show_signature_annotations: true
+            show_signature_type_parameters: true
+            signature_crossrefs: true
+            relative_crossrefs: true
+            scoped_crossrefs: true
+            unwrap_annotated: true
+            # inherited_members: true
+            parameter_headings: true
+            type_parameter_headings: true
+            merge_init_into_class: true
+            show_root_heading: true
+            # show_root_full_path: false
+            show_source: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            # show_submodules: true
+            # docstring_section_style: spacy
+            docstring_options:
+              ignore_init_summary: true
+            extensions:
+              - pydantic:
+                  schema: true
