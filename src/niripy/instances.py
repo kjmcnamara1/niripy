@@ -1,10 +1,9 @@
-from typing import Any, Literal, TypeVar, override
+from typing import Any, Literal, override
 
 from pydantic.alias_generators import to_pascal, to_snake
 
 from niripy.models import (
     LayerSurface,
-    ModelWithInstance,
     Output,
     Reply,
     Response,
@@ -12,8 +11,6 @@ from niripy.models import (
     Workspace,
 )
 from niripy.sockets import Socket
-
-T = TypeVar("T", bound=ModelWithInstance)
 
 RequestCmd = Literal[
     "outputs",
