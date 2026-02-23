@@ -6,7 +6,7 @@ See the API section for generated reference documentation.
 
 ## Niri Version
 
-The NirPy API supports Niri Version 25.11 (b35bcae)
+The NiriPy API supports Niri Version 25.11 (b35bcae)
 
 ## Development Roadmap
 

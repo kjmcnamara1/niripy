@@ -51,7 +51,9 @@ markdown_extensions:
       slugify: !!python/object/apply:pymdownx.slugs.slugify
         kwds:
           case: lower
-  - pymdownx.snippets
+  - pymdownx.snippets:
+      auto_append:
+        - docs/includes/glossary.md
   - pymdownx.betterem
   - pymdownx.tasklist:
       custom_checkbox: true
@@ -158,9 +160,10 @@ plugins:
             show_symbol_type_heading: true
             show_symbol_type_toc: true
             # show_submodules: true
-            # docstring_section_style: spacy
+            # docstring_section_style: list
             docstring_options:
               ignore_init_summary: true
+              # returns_named_value: false
             extensions:
               - pydantic:
                   schema: true
