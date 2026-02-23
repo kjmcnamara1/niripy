@@ -22,7 +22,7 @@
         packages = {
           niripy = python.pkgs.buildPythonPackage {
             pname = "niripy";
-            version = "0.2.5";
+            version = "0.2.6";
             pyproject = true;
 
             src = ./.;

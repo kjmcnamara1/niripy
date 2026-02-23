@@ -7,18 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- AUR package
-- Github action for publishing to AUR
-- Update shield for AUR in README.md
-
-- Docstrings
-- Generate documentation with [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
-
 - Second socket for listening to event-stream
 - Instance.watch method for events
 - Add tests for event-stream
 
+- Audit unit tests
+- Second look at sockets
+
 - [x] Publish to pypi test (uv publish --index testpypi --token $UV_PUBLISH_TOKEN_TEST)
+
+## [0.2.6] - 2026-02-23
+
+### Added
+
+- AUR package
+- Github workflow for publishing to AUR
+- flake.nix
+- Documentation site <https://kjmcnamara1.github.io/niripy>
+- Github workflow for deploying documentation site
+
+### Changed
+
+- AUR shield and install in README.md
+
+### Removed
+
+- instances.T and imports TypeVar and ModelWithInstance
 
 ## [0.2.5] - 2026-02-11
 
