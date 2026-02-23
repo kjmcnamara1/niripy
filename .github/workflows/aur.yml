@@ -1,9 +1,10 @@
 name: Publish to AUR
 
 on:
+  workflow_dispatch:
+  workflow_call:
   release:
     types: [published]
-  workflow_dispatch: {}
 
 jobs:
   aur:
@@ -16,7 +17,7 @@ jobs:
         with:
           fetch-tags: true
 
-      - name: Get commit metadata
+      - name: Get latest commit metadata
         id: meta
         run: |
           echo "COMMIT_USERNAME=$(git log -1 --format='%an')" >> $GITHUB_ENV
@@ -35,6 +36,7 @@ jobs:
           # commit_username: ${{ github.event.release.author.login }}
           # commit_email: ${{ github.actor }}
           # commit_message: Update to ${{ github.ref_name }}
+          # WARN: Will this work when called from tag event?
           commit_message: Update to ${{ github.event.release.tag_name }}
           ssh_keyscan_types: rsa,ecdsa,ed25519
           updpkgsums: true
