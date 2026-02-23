@@ -77,7 +77,9 @@ class ModelWithInstance(BaseModel):
 
 
 class ConfiguredPosition(BaseModel):
-    """A 2D position with integer coordinates.
+    """A 2D [position][1] with integer coordinates.
+
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.ConfiguredPosition.html
 
     Attributes:
         x (int): X coordinate.
@@ -89,7 +91,9 @@ class ConfiguredPosition(BaseModel):
 
 
 class KeyboardLayouts(BaseModel):
-    """Information about available keyboard layouts.
+    """Information about available [keyboard layouts][1].
+
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.KeyboardLayouts.html
 
     Attributes:
         names (list[str]): List of available keyboard layout names.
@@ -101,9 +105,10 @@ class KeyboardLayouts(BaseModel):
 
 
 class Layer(StrEnum):
-    """Wayland layer shell layer types.
+    """Wayland [layer][1] shell layer types.
 
     Represents the different zwlr_layer_shell layers for positioning surfaces.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/enum.Layer.html
 
     Attributes:
         BACKGROUND: Background layer, below everything.
@@ -119,15 +124,30 @@ class Layer(StrEnum):
 
 
 class LayerSurfaceKeyboardInteractivity(StrEnum):
+    """[Layer surface keyboard interactivity][1] modes.
+
+    Defines the keyboard interactivity behavior for layer surfaces in Wayland,
+    controlling how keyboard input is handled and routed to the surface.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/enum.LayerSurfaceKeyboardInteractivity.html
+
+    Attributes:
+        NONE: Keyboard input is not delivered to the layer surface.
+        EXCLUSIVE: The layer surface has exclusive keyboard focus and receives
+            all keyboard input.
+        ON_DEMAND: Keyboard input is delivered to the layer surface only when
+            explicitly requested.
+    """
+
     NONE = "None"
     EXCLUSIVE = "Exclusive"
     ON_DEMAND = "OnDemand"
 
 
 class LayerSurface(ModelWithInstance):
-    """A layer shell surface (e.g., panel, notification).
+    """A layer shell [surface][1] (e.g., panel, notification).
 
     Represents a surface from the Wayland layer shell protocol.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.LayerSurface.html
 
     Attributes:
         namespace (str): The namespace/identifier of the surface.
@@ -155,6 +175,23 @@ class LayerSurface(ModelWithInstance):
 
 
 class Transform(StrEnum):
+    """Image [transformation][1] operations.
+
+    Represents various transformations that can be applied to images,
+    including rotations and flips.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/enum.Transform.html
+
+    Attributes:
+        NORMAL: No transformation applied.
+        ROTATE_90: Rotate image 90 degrees clockwise.
+        ROTATE_180: Rotate image 180 degrees.
+        ROTATE_270: Rotate image 270 degrees clockwise.
+        FLIPPED: Flip image horizontally.
+        FLIPPED_90: Flip image horizontally and rotate 90 degrees clockwise.
+        FLIPPED_180: Flip image horizontally and rotate 180 degrees.
+        FLIPPED_270: Flip image horizontally and rotate 270 degrees clockwise.
+    """
+
     NORMAL = "Normal"
     ROTATE_90 = "_90"
     ROTATE_180 = "_180"
@@ -166,10 +203,11 @@ class Transform(StrEnum):
 
 
 class LogicalOutput(BaseModel):
-    """Logical output configuration and transformations.
+    """[Logical output][1] configuration and transformations.
 
     Represents the logical position and scaling of an output in a multi-monitor
     setup.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.LogicalOutput.html
 
     Attributes:
         x (int): Logical X position in pixels.
@@ -189,7 +227,9 @@ class LogicalOutput(BaseModel):
 
 
 class Mode(BaseModel):
-    """A display mode (resolution and refresh rate).
+    """A display [mode][1] (resolution and refresh rate).
+
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.Mode.html
 
     Attributes:
         width (int): Resolution width in pixels.
@@ -205,9 +245,10 @@ class Mode(BaseModel):
 
 
 class Output(ModelWithInstance):
-    """A monitor/output device.
+    """A [monitor/output][1] device.
 
     Represents a connected display monitor with its capabilities and current state.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.Output.html
 
     Attributes:
         name (str): Output identifier (e.g., "HDMI-1", "DP-2").
@@ -276,7 +317,9 @@ class Output(ModelWithInstance):
 
 
 class Overview(BaseModel):
-    """Overview mode state.
+    """[Overview][1] mode state.
+
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.Overview.html
 
     Attributes:
         is_open (bool): Whether the overview is currently open/visible.
@@ -287,7 +330,9 @@ class Overview(BaseModel):
 
 # TODO: test colorpicker
 class PickedColor(BaseModel):
-    """A color picked by the color picker tool.
+    """A [color][1] picked by the color picker tool.
+
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.PickedColor.html
 
     Attributes:
         rgb (tuple[float, float, float]): RGB color values (typically 0-1 range).
@@ -300,7 +345,9 @@ class PickedColor(BaseModel):
 
 
 class Timestamp(BaseModel):
-    """A timestamp with second and nanosecond precision.
+    """A [timestamp][1] with second and nanosecond precision.
+
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.Timestamp.html
 
     Attributes:
         seconds (int): Number of seconds.
@@ -312,7 +359,9 @@ class Timestamp(BaseModel):
 
 
 class VrrToSet(BaseModel):
-    """VRR (Variable Refresh Rate) settings to apply.
+    """[VRR][1] (Variable Refresh Rate) settings to apply.
+
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.VrrToSet.html
 
     Attributes:
         vrr (bool): Whether to enable VRR.
@@ -325,9 +374,10 @@ class VrrToSet(BaseModel):
 
 
 class WindowLayout(BaseModel):
-    """Layout information for a window in the tiling layout.
+    """[Layout information][1] for a window in the tiling layout.
 
     Contains positioning and sizing data for a window within Niri's tiling system.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.WindowLayout.html
 
     Attributes:
         pos_in_scrolling_layout (tuple[int, int] | None): Position in scrolling layout.
@@ -347,9 +397,10 @@ class WindowLayout(BaseModel):
 
 
 class Window(ModelWithInstance):
-    """A window in the Niri compositor.
+    """A [Window][1] in the Niri compositor.
 
     Represents an open window with its state, position, and metadata.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.Window.html
 
     Attributes:
         id (int): Unique window identifier.
@@ -388,9 +439,10 @@ class Window(ModelWithInstance):
 
 
 class Workspace(ModelWithInstance):
-    """A workspace (virtual desktop) in Niri.
+    """A [workspace][1] (virtual desktop) in Niri.
 
     Represents a workspace that contains windows and is assigned to an output.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.Workspace.html
 
     Attributes:
         id (int): Unique workspace identifier.
@@ -449,19 +501,39 @@ class Workspace(ModelWithInstance):
 
 
 class OutputConfigChanged(StrEnum):
+    """[Output configuration][1] change states.
+
+    [1]: https://niri-wm.github.io/niri/niri_ipc/enum.OutputConfigChanged.html
+
+    Attributes:
+        APPLIED: Indicates that the output configuration change was successfully applied.
+        OUTPUT_WAS_MISSING: Indicates that the output configuration change occurred because
+                           the output was previously missing.
+    """
+
     APPLIED = "Applied"
     OUTPUT_WAS_MISSING = "OutputWasMissing"
 
 
 class CastKind(StrEnum):
+    """Available [casting/screen capture][1] backends.
+
+    [1]: https://niri-wm.github.io/niri/niri_ipc/enum.CastKind.html
+
+    Attributes:
+        PIPEWIRE: PipeWire audio/video server backend for screen casting.
+        WLR_SCREENCOPY: Wlroots screencopy protocol backend for screen capture.
+    """
+
     PIPEWIRE = "PipeWire"
     WLR_SCREENCOPY = "WlrScreencopy"
 
 
 class CastTarget(BaseModel):
-    """Target of a screen cast (what to record).
+    """[Target][1] of a screen cast (what to record).
 
     One of the three fields should be set to indicate the cast target.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/enum.CastTarget.html
 
     Attributes:
         nothing (dict[str, str] | None): No specific target (background, etc.).
@@ -477,9 +549,10 @@ class CastTarget(BaseModel):
 
 # TODO: test screencasting
 class Cast(BaseModel):
-    """An active screen cast session.
+    """An active [screen cast][1] session.
 
     Represents a screen capture/recording session.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/struct.Cast.html
 
     Attributes:
         stream_id (int): Stream identifier.
@@ -506,10 +579,11 @@ class Cast(BaseModel):
 
 
 class Response(BaseModel):
-    """A response from a Niri IPC request.
+    """A [response][1] from a Niri IPC request.
 
     Contains the result of a request, with one of the fields populated depending
     on the request type.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/enum.Response.html
 
     Attributes:
         handled (bool | None): Whether an action was handled.
@@ -575,10 +649,11 @@ class Response(BaseModel):
 
 
 class Reply(BaseModel):
-    """A Niri IPC protocol reply.
+    """A Niri IPC protocol [reply][1].
 
     Wraps a Response with success/error indication. Either `ok` or `err`
     will be set, never both.
+    [1]: https://niri-wm.github.io/niri/niri_ipc/type.Reply.html
 
     Attributes:
         ok (Response | None): The response data if the request succeeded.
