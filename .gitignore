@@ -18,3 +18,7 @@ coverage.xml
 # Nix build artifacts
 result
 result-*
+
+# mkdocs artifacts
+site/
+.cache/
