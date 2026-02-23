@@ -1,11 +1,12 @@
-name: Publish package
+name: Publish to PyPI
 
 on:
   release:
     types: [published]
+  workflow_dispatch: {}
 
 jobs:
-  build_and_publish:
+  pypi:
     name: Build and Publish to PyPI
     runs-on: ubuntu-latest
     environment:
