@@ -1,0 +1,40 @@
+name: Publish to AUR
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch: {}
+
+jobs:
+  aur:
+    name: Push PKGBUILD to AUR
+    runs-on: ubuntu-latest
+    environment:
+      name: aur
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-tags: true
+
+      - name: Get commit metadata
+        id: meta
+        run: |
+          echo "COMMIT_USERNAME=$(git log -1 --format='%an')" >> $GITHUB_ENV
+          echo "COMMIT_EMAIL=$(git log -1 --format='%ae')" >> $GITHUB_ENV
+
+      - name: Deploy to AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v4
+        with:
+          pkgname: python-niripy
+          pkgbuild: ./PKGBUILD
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          commit_username: ${{ env.COMMIT_USERNAME }}
+          commit_email: ${{ env.COMMIT_EMAIL }}
+          # commit_username: ${{ secrets.AUR_USERNAME }}
+          # commit_email: ${{ secrets.AUR_EMAIL }}
+          # commit_username: ${{ github.event.release.author.login }}
+          # commit_email: ${{ github.actor }}
+          # commit_message: Update to ${{ github.ref_name }}
+          commit_message: Update to ${{ github.event.release.tag_name }}
+          ssh_keyscan_types: rsa,ecdsa,ed25519
+          updpkgsums: true
