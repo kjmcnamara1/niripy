@@ -3,7 +3,7 @@
 
 _name=niripy
 pkgname=python-$_name
-pkgver=0.2.5
+pkgver=0.2.7
 pkgrel=1
 pkgdesc="Python bindings for Niri."
 arch=(any)
