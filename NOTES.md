@@ -2,28 +2,29 @@
 
 ## Bump Version
 
-1. Increase version in [pyproject.toml](pyproject.toml) and [uv.lock](uv.lock)
+1. Bump version in [pyproject.toml](pyproject.toml) and [uv.lock](uv.lock)
    ```sh
    uv version --bump major/minor/patch
    ```
-2. Increase packages.version in [flake.nix](flake.nix) (~line 25)
-3. Increase pkver in [PKGBUILD](PKGBUILD) (~line 6)
-4. Add section to [CHANGELOG.md](CHANGELOG.md) with version, date, and
+2. Bump packages.version in [flake.nix](flake.nix) (~line 25)
+3. Bump pkver in [PKGBUILD](PKGBUILD) (~line 6)
+4. Bump version in [index.md](docs/index.md) (~line 3)
+5. Add section to [CHANGELOG.md](CHANGELOG.md) with version, date, and
    Added/Changed/Deprecated/Removed/Fixed/Security
-5. Commit changes
+6. Commit changes
    ```sh
    git add .
    git commit -m "build(release): bump version to {version}"
    ```
-6. Tag (annotated) commit with version
+7. Tag (annotated) commit with version
    ```sh
    git tag -a v{version} -m "Release version {version}"
    ```
-7. Push commits and tag
+8. Push commits and tag
    ```sh
    git push --follow-tags
    ```
-8. CI/CD should run checks, publish release, push to PyPI and AUR, and update the website
+9. CI/CD should run checks, publish release, push to PyPI and AUR, and update the website
 
 ## Nix Flake
 

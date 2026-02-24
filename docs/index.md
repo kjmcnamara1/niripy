@@ -1,4 +1,6 @@
-# NiriPy Documentation
+# Welcome to NiriPy!
+
+Current version: **0.2.7**
 
 NiriPy provides Python bindings for the [Niri](https://yalter.github.io/niri "The scrollable-tiling Wayland compositor") wayland compositor.
 
