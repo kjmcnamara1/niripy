@@ -10,11 +10,16 @@ jobs:
 
   release:
     needs: [quality]
+    permissions:
+      contents: write
     uses: ./.github/workflows/release.yml
     # secrets: inherit
 
   pypi:
     needs: [release]
+    permissions:
+      id-token: write
+      contents: write
     uses: ./.github/workflows/pypi.yml
     # secrets: inherit
 
@@ -25,5 +30,7 @@ jobs:
 
   docs:
     needs: [release]
+    permissions:
+      contents: write
     uses: ./.github/workflows/docs.yml
     # secrets: inherit
