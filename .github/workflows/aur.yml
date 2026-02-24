@@ -24,7 +24,7 @@ jobs:
           echo "COMMIT_EMAIL=$(git log -1 --format='%ae')" >> $GITHUB_ENV
 
       - name: Deploy to AUR
-        uses: KSXGitHub/github-actions-deploy-aur@v4
+        uses: KSXGitHub/github-actions-deploy-aur@v4.0.0
         with:
           pkgname: python-niripy
           pkgbuild: ./PKGBUILD
