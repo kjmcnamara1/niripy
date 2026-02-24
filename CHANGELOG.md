@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [x] Publish to pypi test (uv publish --index testpypi --token $UV_PUBLISH_TOKEN_TEST)
 
+## [0.2.7] - 2026-02-23
+
+### Added
+
+- Permissions to calling cicd workflow for release, pypi, and docs
+
 ## [0.2.6] - 2026-02-23
 
 ### Added
