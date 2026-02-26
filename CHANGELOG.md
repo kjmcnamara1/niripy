@@ -7,11 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- [x] Add NiriPy version to docs/index.md
-
-- [x] [markdown-pycon](https://pawamoy.github.io/markdown-pycon/) for mkdocs
-
 - Change public API:
+  - ModelWithInstance -> \_NiriModel
   - Instance -> NiriInstance?
   - Socket -> NiriSocket(ABC/Protocol)?
     - CommandSocket
@@ -38,7 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Audit unit tests
 - Second look at sockets
 
-- [x] Publish to pypi test (uv publish --index testpypi --token $UV_PUBLISH_TOKEN_TEST)
+## [0.2.8] -
+
+- [x] Add NiriPy version to docs/index.md
+
+- [x] [markdown-pycon](https://pawamoy.github.io/markdown-pycon/) for mkdocs
 
 ## [0.2.7] - 2026-02-23
 

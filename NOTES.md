@@ -141,3 +141,17 @@ nix run
 5. Regenerate the **.SRCINFO** with `makepkg --printsrcinfo > .SRCINFO`
 6. Commit changes with message `Update to {version}`
 7. Push to AUR with `git push origin master`
+
+## PyPI
+
+Publish to pypi test
+
+```sh
+uv publish --index testpypi --token $UV_PUBLISH_TOKEN_TEST
+```
+
+Publish to pypi
+
+```sh
+uv publish
+```
