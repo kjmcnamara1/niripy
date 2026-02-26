@@ -31,6 +31,7 @@ markdown_extensions:
   - attr_list
   - def_list
   - admonition
+  - pycon
   - pymdownx.details
   - toc:
       permalink: ⚓︎
@@ -117,6 +118,8 @@ plugins:
   - search
   - autorefs
   # - optimize
+  - typeset
+  - termynal
   - git-revision-date-localized
   # - git-revision-date-localized:
   #     enable_creation_date: true
@@ -164,6 +167,9 @@ plugins:
             docstring_options:
               ignore_init_summary: true
               # returns_named_value: false
+            # filters:
+            #   - "!^_[^_]"
+            #   - "!model_post_init"
             extensions:
               - pydantic:
                   schema: true

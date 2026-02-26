@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- [x] Add NiriPy version to docs/index.md
+
+- [x] [markdown-pycon](https://pawamoy.github.io/markdown-pycon/) for mkdocs
+
+- Change public API:
+  - Instance -> NiriInstance?
+  - Socket -> NiriSocket(ABC/Protocol)?
+    - CommandSocket
+    - EventSocket
+  - RequestCmd -> StrEnum?
+  - ActionCmd -> StrEnum?
+  - kebab_to_pascal -> \_kebab_to_pascal
+  - LayerSurface.output -> get_output()
+  - Output.workspaces -> get_workspaces()
+  - Output.layers -> get_layers()
+  - Output.windows -> get_windows()
+  - Window.workspace -> get_workspace()
+  - Workspace.output -> get_output()
+  - Workspace.active_window -> get_active_window()
+  - Workspace.windows -> get_windows()
+
+- Automate version bumping?
+  - [Commitizen](https://commitizen-tools.github.io/commitizen/)
+
 - Second socket for listening to event-stream
 - Instance.watch method for events
 - Add tests for event-stream

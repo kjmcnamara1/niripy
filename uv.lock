@@ -345,6 +345,15 @@ wheels = [
 ]
 
 [[package]]
+name = "markdown-pycon"
+version = "1.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f4/44/bc5b35c24a475b46eb64ca0da6d482bda073cb0a4f189a05d637663c9bde/markdown_pycon-1.0.1.tar.gz", hash = "sha256:02089b53b2056fd844e90e0c0ecd5c5b6f28d24daf313ddbea736fb90e066c32", size = 33394, upload-time = "2025-01-10T01:05:22.144Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/80/cb/105897f8a5ad9b0d1b41b2175b350f8476c400f65ed232da80879516dadb/markdown_pycon-1.0.1-py3-none-any.whl", hash = "sha256:938ac2595c0056c10f497c2bde3e5add06797e485fc83b187b0eacc29a9ef7b2", size = 6608, upload-time = "2025-01-10T01:05:20.761Z" },
+]
+
+[[package]]
 name = "markupsafe"
 version = "3.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -600,11 +609,13 @@ dev = [
 ]
 docs = [
     { name = "griffe-pydantic" },
+    { name = "markdown-pycon" },
     { name = "mike" },
     { name = "mkdocs-git-committers-plugin-2" },
     { name = "mkdocs-git-revision-date-localized-plugin" },
     { name = "mkdocs-material" },
     { name = "mkdocstrings", extra = ["python"] },
+    { name = "termynal" },
 ]
 
 [package.metadata]
@@ -619,11 +630,13 @@ dev = [
 ]
 docs = [
     { name = "griffe-pydantic", specifier = ">=1.3.1" },
+    { name = "markdown-pycon", specifier = ">=1.0.1" },
     { name = "mike", specifier = ">=2.1.3" },
     { name = "mkdocs-git-committers-plugin-2", specifier = ">=2.5.0" },
     { name = "mkdocs-git-revision-date-localized-plugin", specifier = ">=1.5.1" },
     { name = "mkdocs-material", specifier = ">=9.7.2" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=1.0.3" },
+    { name = "termynal", specifier = ">=0.13.1" },
 ]
 
 [[package]]
@@ -941,6 +954,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/44/cd/a040c4b3119bbe532e5b0732286f805445375489fceaec1f48306068ee3b/smmap-5.0.2.tar.gz", hash = "sha256:26ea65a03958fa0c8a1c7e8c7a58fdc77221b8910f6be2131affade476898ad5", size = 22329, upload-time = "2025-01-02T07:14:40.909Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/04/be/d09147ad1ec7934636ad912901c5fd7667e1c858e19d355237db0d0cd5e4/smmap-5.0.2-py3-none-any.whl", hash = "sha256:b30115f0def7d7531d22a0fb6502488d879e75b260a9db4d0819cfb25403af5e", size = 24303, upload-time = "2025-01-02T07:14:38.724Z" },
+]
+
+[[package]]
+name = "termynal"
+version = "0.13.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "markdown" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6c/a6/099ed030e3e534ec91aec84dfe2cb11cea6ec8dcbec454fe569cdbbb4888/termynal-0.13.1.tar.gz", hash = "sha256:c7abecfdbda3ccdeee2723049a70f0e2e7f63e1973bb9b8f0b3fe6c1bfb391cd", size = 174253, upload-time = "2025-09-01T13:03:35.02Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/80/72/6949a512f16653cecebb737b8512ee76ca078d8e0e4e948d7322b528fb4d/termynal-0.13.1-py3-none-any.whl", hash = "sha256:7a1605a4d4ed38bf851bf25f842aafa52ef29786d52762aecee59622ed030592", size = 10628, upload-time = "2025-09-01T13:03:34.236Z" },
 ]
 
 [[package]]
