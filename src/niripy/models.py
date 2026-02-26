@@ -19,14 +19,12 @@ class ReplyError(Exception):
     - A response doesn't contain expected fields
 
     Example:
-        ```py
         >>> from niripy.models import Reply, ReplyError
         >>> try:
         ...     reply = Reply.model_validate_json(error_response)
         ...     reply.unwrap()
         ... except ReplyError as e:
         ...     print(f"Niri error: {e}")
-        ```
     """
 
     pass
@@ -46,13 +44,11 @@ class ModelWithInstance(BaseModel):
         `context={'instance': instance}` to `model_validate()`.
 
     Example:
-        ```py
         >>> from niripy.instances import Instance
         >>> from niripy.models import Window
         >>> instance = Instance()
         >>> window_data = {"id": 1, "title": "Test", ...}
         >>> window = Window.model_validate(window_data, context={'instance': instance})
-        ```
     """
 
     _instance: Instance
@@ -163,7 +159,7 @@ class LayerSurface(ModelWithInstance):
     keyboard_interactivity: LayerSurfaceKeyboardInteractivity
 
     # TODO: switch to get_output()
-    # not idomatic to access socket call via property
+    # bad to access socket call via property
     @property
     def output(self) -> Output | None:
         """Get the output this layer surface is displayed on.
@@ -636,11 +632,9 @@ class Response(BaseModel):
             ReplyError: If all fields are None.
 
         Example:
-            ```py
             >>> reply = Reply.model_validate_json(json_data, context={'instance': instance})
             >>> response = reply.unwrap()
             >>> windows = response.unwrap()  # Extract the actual data
-            ```
         """
         for value in self.model_dump().values():
             if value is not None:
@@ -660,14 +654,12 @@ class Reply(BaseModel):
         err (str | None): Error message if the request failed.
 
     Example:
-        ```py
         >>> from niripy.instances import Instance
         >>> instance = Instance()
         >>> json_data = instance.socket.send_command({"Outputs": {}})
         >>> reply = Reply.model_validate_json(json_data, context={'instance': instance})
         >>> response = reply.unwrap()  # Raises ReplyError if err is set
         >>> windows = response.unwrap()  # Extract the actual data
-        ```
     """
 
     model_config = ConfigDict(alias_generator=to_pascal)  # pyright: ignore[reportUnannotatedClassAttribute]
@@ -684,10 +676,8 @@ class Reply(BaseModel):
             ReplyError: If the reply contains an error.
 
         Example:
-            ```py
             >>> reply = Reply.model_validate_json(data, context={'instance': instance})
             >>> response = reply.unwrap()  # Raises if err is set
-            ```
         """
         if self.err is not None:
             raise ReplyError(f"Niri replied with error: {self.err}")

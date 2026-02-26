@@ -14,12 +14,10 @@ class SocketError(Exception):
     waiting for a response.
 
     Example:
-        ```py
         >>> try:
         ...     socket.send("command")
         ... except SocketError as e:
         ...     print(f"Socket operation failed: {e}")
-        ```
     """
 
     pass
@@ -32,22 +30,17 @@ class Socket:
     responses from a Niri IPC socket. It handles connection management, message
     serialization, and error handling.
 
-    Attributes:
-        path (Path): The filesystem path to the Unix domain socket.
-        _socket (socket.socket | None): The underlying socket object, or None if
-            not connected.
-
     Example:
-        ```py
         >>> from niripy.sockets import Socket
         >>> socket = Socket()
         >>> response = socket.send_command({"action": "version"})
         >>> print(response)
-        ```
     """
 
     path: Path
+    """The filesystem path to the Unix domain socket."""
     _socket: socket.socket | None
+    """The underlying socket object, or None if not connected."""
 
     def __init__(self, path_to_socket: str = ""):
         """Initialize a Socket instance.
@@ -67,13 +60,11 @@ class Socket:
                 valid socket.
 
         Example:
-            ```py
             >>> # Using environment variable
             >>> socket = Socket()
             >>>
             >>> # Using explicit path
             >>> socket = Socket("/run/user/1000/niri.sock")
-            ```
         """
         path_to_socket = path_to_socket or os.getenv("NIRI_SOCKET", "")
         if not path_to_socket:
@@ -108,10 +99,8 @@ class Socket:
             ConnectionRefusedError: If connection to the socket fails.
 
         Example:
-            ```py
             >>> socket = Socket()
             >>> socket.connect(timeout=2.0)
-            ```
         """
         if self._socket:
             raise SocketError("Connect to socket failed: Socket is already connected.")
@@ -131,11 +120,9 @@ class Socket:
             SocketError: If the socket is not currently connected.
 
         Example:
-            ```py
             >>> socket = Socket()
             >>> socket.connect()
             >>> socket.close()
-            ```
         """
         if not self._socket:
             raise SocketError("Close socket failed: Socket is not connected.")
@@ -157,11 +144,9 @@ class Socket:
             UnicodeEncodeError: If the data cannot be encoded as UTF-8.
 
         Example:
-            ```py
             >>> socket = Socket()
             >>> socket.connect()
             >>> socket.send('{"action": "version"}')
-            ```
         """
         if not self._socket:
             raise SocketError("Send data to socket failed: Socket is not connected.")
@@ -183,12 +168,10 @@ class Socket:
             SocketError: If no data becomes available within the timeout period.
 
         Example:
-            ```py
             >>> socket = Socket()
             >>> socket.connect()
             >>> socket.send('{"action": "version"}')
             >>> socket.wait(timeout=5.0)  # Wait up to 5 seconds for response
-            ```
         """
         if not self._socket:
             raise SocketError(
@@ -217,14 +200,12 @@ class Socket:
             UnicodeDecodeError: If the data cannot be decoded as UTF-8.
 
         Example:
-            ```py
             >>> socket = Socket()
             >>> socket.connect()
             >>> socket.send('{"action": "version"}')
             >>> socket.wait(timeout=5.0)
             >>> response = socket.read()
             >>> print(response)
-            ```
         """
         if not self._socket:
             raise SocketError("Read data from socket failed: Socket is not connected.")
@@ -268,7 +249,6 @@ class Socket:
             ConnectionRefusedError: If connection to the socket fails.
 
         Example:
-            ```py
             >>> from niripy.sockets import Socket
             >>> socket = Socket()
             >>>
@@ -279,7 +259,6 @@ class Socket:
             >>> # Send a pre-formatted JSON command
             >>> response = socket.send_command('{"action": "version"}')
             >>> print(response)
-            ```
         """
         self.connect()
         self.send(json.dumps(message) + "\n")

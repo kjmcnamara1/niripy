@@ -180,24 +180,12 @@ class Instance:
 
     Provides methods to query and control the Niri window manager via IPC socket.
     Handles communication with Niri, model validation, and state management.
-
-    Attributes:
-        socket (Socket): The IPC socket connection to Niri.
-        version (str): The version string of the connected Niri instance.
-
-    Example:
-        ```py
-        >>> from niripy.instances import Instance
-        >>> instance = Instance()
-        >>> print(f"Niri version: {instance.version}")
-        >>> windows = instance.get_windows()
-        >>> for window in windows:
-        ...     print(f"Window: {window.title}")
-        ```
     """
 
     socket: Socket
+    """The IPC socket connection to Niri."""
     version: str
+    """The version string of the connected Niri instance."""
 
     def __init__(self):
         """Initialize a connection to the Niri window manager.
@@ -210,10 +198,8 @@ class Instance:
             ConnectionRefusedError: If unable to connect to the Niri socket.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> print(f"Connected to Niri {instance.version}")
-            ```
         """
         self.socket = Socket()
         self.version = self._request("version").version or "unknown"
@@ -245,7 +231,6 @@ class Instance:
             True if the action was handled by Niri, False otherwise.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> # Close the current window
             >>> instance.action("close-window")
@@ -254,7 +239,6 @@ class Instance:
             >>> # Focus workspace by index
             >>> instance.action("focus-workspace", index=1)
             True
-            ```
         """
         action_str = kebab_to_pascal(action)
         request: dict[str, Any] = {"Action": {action_str: {}}}
@@ -274,12 +258,10 @@ class Instance:
                 list if no windows are open.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> windows = instance.get_windows()
             >>> for window in windows:
             ...     print(f"Title: {window.title}")
-            ```
         """
         return self._request("windows").windows or []
 
@@ -293,11 +275,8 @@ class Instance:
             ValueError: If no window is focused.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> focused = instance.get_focused_window()
-            >>> print(f"Focused: {focused.title}")
-            ```
         """
         focused_window = self._request("focused-window").focused_window
         if focused_window is None:
@@ -314,12 +293,10 @@ class Instance:
             The window with the given ID, or None if not found.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> window = instance.get_window_by_id(12345)
             >>> if window:
             ...     print(f"Found: {window.title}")
-            ```
         """
         for window in self.get_windows():
             if window.id == window_id:
@@ -333,12 +310,10 @@ class Instance:
                 no workspaces exist.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> workspaces = instance.get_workspaces()
             >>> for ws in workspaces:
             ...     print(f"Workspace: {ws.name}, Focused: {ws.is_focused}")
-            ```
         """
         return self._request("workspaces").workspaces or []
 
@@ -352,11 +327,9 @@ class Instance:
             ValueError: If no workspace is focused.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> focused = instance.get_focused_workspace()
             >>> print(f"Focused workspace: {focused.name}")
-            ```
         """
         focused_workspace = next(
             (ws for ws in self.get_workspaces() if ws.is_focused), None
@@ -375,12 +348,10 @@ class Instance:
             The workspace with the given ID, or None if not found.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> workspace = instance.get_workspace_by_id(1)
             >>> if workspace:
             ...     print(f"Found workspace: {workspace.name}")
-            ```
         """
         for workspace in self.get_workspaces():
             if workspace.id == workspace_id:
@@ -397,12 +368,10 @@ class Instance:
                 found.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> workspace = instance.get_workspace_by_name("work")
             >>> if workspace:
             ...     print(f"Found workspace: {workspace.id}")
-            ```
         """
         for workspace in self.get_workspaces():
             if workspace.name == name:
@@ -416,12 +385,10 @@ class Instance:
                 empty list if no outputs are connected.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> outputs = instance.get_outputs()
             >>> for output in outputs:
             ...     print(f"Monitor: {output.name}, Width: {output.physical_width}")
-            ```
         """
         return list((self._request("outputs").outputs or {}).values())
 
@@ -435,11 +402,9 @@ class Instance:
             ValueError: If no output is focused.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> output = instance.get_focused_output()
             >>> print(f"Focused monitor: {output.name}")
-            ```
         """
         focused_output = self._request("focused-output").focused_output
         if focused_output is None:
@@ -456,12 +421,10 @@ class Instance:
             The output with the given name, or None if not found.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> output = instance.get_output_by_name("HDMI-1")
             >>> if output:
             ...     print(f"Found monitor: {output.name}")
-            ```
         """
         outputs = self._request("outputs").outputs or {}
         return outputs.get(name)
@@ -474,11 +437,9 @@ class Instance:
                 backgrounds). Returns an empty list if no layer surfaces exist.
 
         Example:
-            ```py
             >>> instance = Instance()
             >>> layers = instance.get_layers()
             >>> for layer in layers:
             ...     print(f"Layer: {layer.namespace}")
-            ```
         """
         return self._request("layers").layers or []
