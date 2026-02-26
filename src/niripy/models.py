@@ -30,7 +30,7 @@ class ReplyError(Exception):
     pass
 
 
-class ModelWithInstance(BaseModel):
+class _NiriModel(BaseModel):
     """Base model for Niri objects that need access to the Instance.
 
     This is a Pydantic BaseModel that stores a reference to the Instance,
@@ -139,7 +139,7 @@ class LayerSurfaceKeyboardInteractivity(StrEnum):
     ON_DEMAND = "OnDemand"
 
 
-class LayerSurface(ModelWithInstance):
+class LayerSurface(_NiriModel):
     """A layer shell [surface][1] (e.g., panel, notification).
 
     Represents a surface from the Wayland layer shell protocol.
@@ -240,7 +240,7 @@ class Mode(BaseModel):
     is_preferred: bool
 
 
-class Output(ModelWithInstance):
+class Output(_NiriModel):
     """A [monitor/output][1] device.
 
     Represents a connected display monitor with its capabilities and current state.
@@ -392,7 +392,7 @@ class WindowLayout(BaseModel):
     window_offset_in_tile: tuple[float, float]
 
 
-class Window(ModelWithInstance):
+class Window(_NiriModel):
     """A [Window][1] in the Niri compositor.
 
     Represents an open window with its state, position, and metadata.
@@ -434,7 +434,7 @@ class Window(ModelWithInstance):
         return self._instance.get_workspace_by_id(self.workspace_id)
 
 
-class Workspace(ModelWithInstance):
+class Workspace(_NiriModel):
     """A [workspace][1] (virtual desktop) in Niri.
 
     Represents a workspace that contains windows and is assigned to an output.
