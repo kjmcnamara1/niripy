@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from niripy.instances import Instance, kebab_to_pascal
+from niripy.instances import Instance, _kebab_to_pascal
 from niripy.models import (
     LayerSurface,
     Output,
@@ -18,19 +18,19 @@ class TestKebabToPascal:
 
     def test_single_word(self):
         """Test conversion of single word."""
-        assert kebab_to_pascal("version") == "Version"
+        assert _kebab_to_pascal("version") == "Version"
 
     def test_kebab_case(self):
         """Test conversion of kebab-case string."""
-        assert kebab_to_pascal("keyboard-layouts") == "KeyboardLayouts"
+        assert _kebab_to_pascal("keyboard-layouts") == "KeyboardLayouts"
 
     def test_multiple_hyphens(self):
         """Test conversion of string with multiple hyphens."""
-        assert kebab_to_pascal("focus-column-left") == "FocusColumnLeft"
+        assert _kebab_to_pascal("focus-column-left") == "FocusColumnLeft"
 
     def test_empty_string(self):
         """Test conversion of empty string."""
-        result = kebab_to_pascal("")
+        result = _kebab_to_pascal("")
         assert isinstance(result, str)
 
 

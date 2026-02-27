@@ -171,7 +171,7 @@ ActionCmd = Literal[
 ]
 
 
-def kebab_to_pascal(s: str) -> str:
+def _kebab_to_pascal(s: str):
     return to_pascal(to_snake(s))
 
 
@@ -209,7 +209,7 @@ class Instance:
         return f"<Instance(socket={str(self.socket.path)!r})>"
 
     def _request(self, command: RequestCmd) -> Response:
-        command_str = kebab_to_pascal(command)
+        command_str = _kebab_to_pascal(command)
         reply = Reply.model_validate_json(
             self.socket.send_command(command_str),
             context={"instance": self},
@@ -240,7 +240,7 @@ class Instance:
             >>> instance.action("focus-workspace", index=1)
             True
         """
-        action_str = kebab_to_pascal(action)
+        action_str = _kebab_to_pascal(action)
         request: dict[str, Any] = {"Action": {action_str: {}}}
         for k, v in kwargs.items():
             request["Action"][action_str].update({k: v})
