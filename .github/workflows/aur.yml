@@ -31,10 +31,6 @@ jobs:
           ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
           commit_username: ${{ env.COMMIT_USERNAME }}
           commit_email: ${{ env.COMMIT_EMAIL }}
-          # commit_username: ${{ secrets.AUR_USERNAME }}
-          # commit_email: ${{ secrets.AUR_EMAIL }}
-          # commit_username: ${{ github.event.release.author.login }}
-          # commit_email: ${{ github.actor }}
           commit_message: Update to ${{ github.ref_name }}
           ssh_keyscan_types: rsa,ecdsa,ed25519
           updpkgsums: true
