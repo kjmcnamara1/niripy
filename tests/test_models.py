@@ -156,7 +156,7 @@ class TestLayerSurface:
             context={"instance": mock_instance},
         )
 
-        output = layer.output
+        output = layer.get_output()
         assert output == mock_output
         mock_instance.get_output_by_name.assert_called_once_with("eDP-1")
 
@@ -350,7 +350,7 @@ class TestOutput:
             context={"instance": mock_instance},
         )
 
-        workspaces = output.workspaces
+        workspaces = output.get_workspaces()
         assert len(workspaces) == 1
         assert workspaces[0].output_name == "eDP-1"
 
@@ -377,7 +377,7 @@ class TestOutput:
             context={"instance": mock_instance},
         )
 
-        layers = output.layers
+        layers = output.get_layers()
         assert len(layers) == 1
         assert layers[0].output_name == "eDP-1"
 
@@ -407,7 +407,7 @@ class TestOutput:
             context={"instance": mock_instance},
         )
 
-        windows = output.windows
+        windows = output.get_windows()
         assert len(windows) == 1
         assert windows[0].workspace_id == 1
 
@@ -596,7 +596,7 @@ class TestWindow:
             context={"instance": mock_instance},
         )
 
-        workspace = window.workspace
+        workspace = window.get_workspace()
         assert workspace == mock_workspace
         mock_instance.get_workspace_by_id.assert_called_once_with(1)
 
@@ -624,7 +624,7 @@ class TestWindow:
             context={"instance": mock_instance},
         )
 
-        workspace = window.workspace
+        workspace = window.get_workspace()
         assert workspace is None
 
 
@@ -671,7 +671,7 @@ class TestWorkspace:
             context={"instance": mock_instance},
         )
 
-        output = workspace.output
+        output = workspace.get_output()
         assert output == mock_output
         mock_instance.get_output_by_name.assert_called_once_with("HDMI-1")
 
@@ -691,7 +691,7 @@ class TestWorkspace:
             context={"instance": mock_instance},
         )
 
-        output = workspace.output
+        output = workspace.get_output()
         assert output is None
 
     def test_workspace_active_window_property(self, mock_instance):
@@ -713,7 +713,7 @@ class TestWorkspace:
             context={"instance": mock_instance},
         )
 
-        window = workspace.active_window
+        window = workspace.get_active_window()
         assert window == mock_window
         mock_instance.get_window_by_id.assert_called_once_with(42)
 
@@ -733,7 +733,7 @@ class TestWorkspace:
             context={"instance": mock_instance},
         )
 
-        window = workspace.active_window
+        window = workspace.get_active_window()
         assert window is None
 
     def test_workspace_windows_property(self, mock_instance):
@@ -756,7 +756,7 @@ class TestWorkspace:
             context={"instance": mock_instance},
         )
 
-        windows = workspace.windows
+        windows = workspace.get_windows()
         assert len(windows) == 1
         assert windows[0].workspace_id == 1
 

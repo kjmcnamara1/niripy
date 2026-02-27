@@ -158,10 +158,7 @@ class LayerSurface(_NiriModel):
     layer: Layer
     keyboard_interactivity: LayerSurfaceKeyboardInteractivity
 
-    # TODO: switch to get_output()
-    # bad to access socket call via property
-    @property
-    def output(self) -> Output | None:
+    def get_output(self) -> Output | None:
         """Get the output this layer surface is displayed on.
 
         Returns:
@@ -272,8 +269,7 @@ class Output(_NiriModel):
     vrr_enabled: bool
     logical: LogicalOutput | None
 
-    @property
-    def workspaces(self) -> list[Workspace]:
+    def get_workspaces(self) -> list[Workspace]:
         """Get all workspaces on this output.
 
         Returns:
@@ -283,8 +279,7 @@ class Output(_NiriModel):
             ws for ws in self._instance.get_workspaces() if ws.output_name == self.name
         ]
 
-    @property
-    def layers(self) -> list[LayerSurface]:
+    def get_layers(self) -> list[LayerSurface]:
         """Get all layer surfaces on this output.
 
         Returns:
@@ -297,14 +292,13 @@ class Output(_NiriModel):
             if layer.output_name == self.name
         ]
 
-    @property
-    def windows(self) -> list[Window]:
+    def get_windows(self) -> list[Window]:
         """Get all windows on workspaces on this output.
 
         Returns:
             Windows from all workspaces on this output.
         """
-        workspace_ids = [ws.id for ws in self.workspaces]
+        workspace_ids = [ws.id for ws in self.get_workspaces()]
         return [
             window
             for window in self._instance.get_windows()
@@ -422,8 +416,7 @@ class Window(_NiriModel):
     layout: WindowLayout
     focus_timestamp: Timestamp | None
 
-    @property
-    def workspace(self) -> Workspace | None:
+    def get_workspace(self) -> Workspace | None:
         """Get the workspace containing this window.
 
         Returns:
@@ -460,8 +453,7 @@ class Workspace(_NiriModel):
     is_focused: bool
     active_window_id: int | None
 
-    @property
-    def output(self) -> Output | None:
+    def get_output(self) -> Output | None:
         """Get the output this workspace is displayed on.
 
         Returns:
@@ -471,8 +463,7 @@ class Workspace(_NiriModel):
             return None
         return self._instance.get_output_by_name(self.output_name)
 
-    @property
-    def active_window(self) -> Window | None:
+    def get_active_window(self) -> Window | None:
         """Get the currently focused window in this workspace.
 
         Returns:
@@ -482,8 +473,7 @@ class Workspace(_NiriModel):
             return None
         return self._instance.get_window_by_id(self.active_window_id)
 
-    @property
-    def windows(self) -> list[Window]:
+    def get_windows(self) -> list[Window]:
         """Get all windows in this workspace.
 
         Returns:
