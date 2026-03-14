@@ -1,7 +1,8 @@
-from typing import Any, Literal, override
+from typing import Any, Literal, override, Callable
 
 from pydantic.alias_generators import to_pascal, to_snake
 
+from niripy.events import NiriEvent
 from niripy.models import (
     LayerSurface,
     Output,
@@ -443,3 +444,20 @@ class Instance:
             ...     print(f"Layer: {layer.namespace}")
         """
         return self._request("layers").layers or []
+
+    def subscribe(self, callback: Callable[[NiriEvent], None]):
+        """Subscribe to an event stream """
+        event_stream = self.socket.event_stream()
+        reply = Reply.model_validate_json(
+            next(event_stream),
+            context={"instance": self},
+        )
+        for line in event_stream:
+            try:
+                event = NiriEvent.from_json(
+                    line,
+                    context={"instance": self})
+                callback(event)
+            except Exception as e:
+                print(f"Error processing event: {e}")
+                continue
