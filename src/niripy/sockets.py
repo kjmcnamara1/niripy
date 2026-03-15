@@ -1,9 +1,11 @@
+from _socket import SHUT_WR
+
 import json
 import os
 import select
 import socket
 from pathlib import Path
-from typing import Any, override
+from typing import Any, override, Generator
 
 
 class SocketError(Exception):
@@ -78,6 +80,7 @@ class Socket:
         if not self.path.is_socket():
             raise FileNotFoundError(f"No socket found at {self.path!r}.")
         self._socket = None
+        self._event_socket = None
 
     @override
     def __repr__(self) -> str:
@@ -267,3 +270,22 @@ class Socket:
         self.close()
 
         return response
+
+    def event_stream(self) -> Generator[str, Any, None]:
+        """Start continuously receiving events from the event stream.
+
+        The first reply is expected to be an {"Ok":"Handled"}, then continuously send Events, one per line.
+
+        Returns:
+            The data read from the socket, decoded as UTF-8. For Niri
+                responses, this will be JSON-formatted.
+        """
+        with socket.socket(socket.AF_UNIX) as niri_socket:
+            niri_socket.connect(str(self.path))
+            with niri_socket.makefile("rw") as file:
+                file.write('"EventStream"')
+                file.flush()
+                niri_socket.shutdown(SHUT_WR)
+
+                for line in file:
+                    yield line

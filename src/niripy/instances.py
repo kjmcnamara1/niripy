@@ -1,7 +1,8 @@
-from typing import Any, Literal, override
+from typing import Any, Literal, override, Generator
 
 from pydantic.alias_generators import to_pascal, to_snake
 
+from niripy.events import NiriEvent
 from niripy.models import (
     LayerSurface,
     Output,
@@ -388,7 +389,7 @@ class Instance:
             >>> instance = Instance()
             >>> outputs = instance.get_outputs()
             >>> for output in outputs:
-            ...     print(f"Monitor: {output.name}, Width: {output.physical_width}")
+            ...     print(f"Monitor: {output.name}, Width: {output.physical_size}")
         """
         return list((self._request("outputs").outputs or {}).values())
 
@@ -443,3 +444,33 @@ class Instance:
             ...     print(f"Layer: {layer.namespace}")
         """
         return self._request("layers").layers or []
+
+    def subscribe(self) -> Generator[NiriEvent, None, None]:
+        """Subscribe to an event stream.
+
+        Yields:
+            NiriEvent: Events received from Niri.
+
+        Example:
+            >>> for event in instance.subscribe():
+            ...     print(event)
+            ...     if condition:
+            ...         break
+        """
+        event_stream = self.socket.event_stream()
+        # first message on stream is a reply, no event:
+        reply_json = next(event_stream)
+        reply = Reply.model_validate_json(
+            reply_json,
+            context={"instance": self},
+        )
+        # Ensure the subscription was successful
+        _ = reply.unwrap()
+
+        for line in event_stream:
+            try:
+                event = NiriEvent.from_json(line, context={"instance": self})
+                yield event
+            except Exception as e:
+                print(f"Error processing event: {e}")
+                continue
