@@ -389,7 +389,7 @@ class Instance:
             >>> instance = Instance()
             >>> outputs = instance.get_outputs()
             >>> for output in outputs:
-            ...     print(f"Monitor: {output.name}, Width: {output.physical_width}")
+            ...     print(f"Monitor: {output.name}, Width: {output.physical_size}")
         """
         return list((self._request("outputs").outputs or {}).values())
 
