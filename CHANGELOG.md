@@ -8,22 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Change public API:
-  - ModelWithInstance -> \_NiriModel
-  - Instance -> NiriInstance?
-  - Socket -> NiriSocket(ABC/Protocol)?
-    - CommandSocket
-    - EventSocket
-  - RequestCmd -> StrEnum?
-  - ActionCmd -> StrEnum?
-  - kebab_to_pascal -> \_kebab_to_pascal
-  - LayerSurface.output -> get_output()
-  - Output.workspaces -> get_workspaces()
-  - Output.layers -> get_layers()
-  - Output.windows -> get_windows()
-  - Window.workspace -> get_workspace()
-  - Workspace.output -> get_output()
-  - Workspace.active_window -> get_active_window()
-  - Workspace.windows -> get_windows()
+  - [ ] Instance -> NiriInstance?
+  - [ ] Socket -> \_NiriSocket(ABC/Protocol)?
+    - [ ] CommandSocket
+    - [ ] EventSocket
+  - [ ] RequestCmd -> StrEnum?
+  - [ ] ActionCmd -> StrEnum?
+
+- Document RequestCmd and ActionCmd
 
 - Automate version bumping?
   - [Commitizen](https://commitizen-tools.github.io/commitizen/)
@@ -37,9 +29,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.8] -
 
-- [x] Add NiriPy version to docs/index.md
+### Added
 
-- [x] [markdown-pycon](https://pawamoy.github.io/markdown-pycon/) for mkdocs
+- Add NiriPy version to docs/index.md
+- [markdown-pycon](https://pawamoy.github.io/markdown-pycon/) for mkdocs
+
+### Removed
+
+- ModelWithInstance from public API
+- kebab_to_pascal from public API
+
+### Changed
+
+- LayerSurface.output -> LayerSurface.get_output()
+- Output.workspaces -> Output.get_workspaces()
+- Output.layers -> Output.get_layers()
+- Output.windows -> Output.get_windows()
+- Window.workspace -> Window.get_workspace()
+- Workspace.output -> Workspace.get_output()
+- Workspace.active_window -> Workspace.get_active_window()
+- Workspace.windows -> Workspace.get_windows()
+
+- Use ty instead of pyright for type checking
 
 ## [0.2.7] - 2026-02-23
 

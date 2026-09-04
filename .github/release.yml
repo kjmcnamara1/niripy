@@ -1,0 +1,22 @@
+changelog:
+  exclude:
+    labels:
+      - skip-changelog
+    authors:
+      - dependabot
+  categories:
+    - title: "🚀 Features"
+      labels:
+        - enhancement
+        - feature
+    - title: "🐛 Bug Fixes"
+      labels:
+        - bug
+        - fix
+    - title: "🧰 Maintenance"
+      labels:
+        - chore
+        - documentation
+    - title: "🧪 Testing"
+      labels:
+        - skip-changelog # Or a specific test label

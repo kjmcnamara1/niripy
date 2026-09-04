@@ -1,0 +1,15 @@
+# Add 'feature' label to any PR with 'feat' in the commit or branch
+feature:
+  - changed-files:
+      - any-glob-to-any-file: "src/**/*"
+  - head-branch: ["^feat/.*"]
+
+# Add 'bug' label to any PR with 'fix'
+bug:
+  - head-branch: ["^fix/.*"]
+
+# Add 'documentation' label to changes in docs
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: "docs/**/*"
+      - any-glob-to-any-file: "README.md"

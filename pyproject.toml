@@ -53,6 +53,9 @@ docs = [
 [tool.ruff]
 exclude = ["tests"]
 
+[tool.ty.rules]
+all = "error"
+
 [tool.pyright]
 ignore = ["tests"]
 reportAny = "none"
